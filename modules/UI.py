@@ -1,4 +1,5 @@
-from PySide2.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QTableWidget, QTableWidgetItem, QPushButton, QDialog, QLineEdit, QLabel
+from PySide2.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QTableWidget, 
+                               QTableWidgetItem, QPushButton, QDialog, QLineEdit, QLabel, QRadioButton)
 
 # Popup box that appears when Add Item button is clicked
 class Add_Popup(QDialog):
@@ -35,8 +36,19 @@ class Add_Popup(QDialog):
         button_layout.addWidget(add_button) # Add buttons to the layout
         button_layout.addWidget(cancel_button)
 
+        radio_layout_left = QVBoxLayout() # Create layouts to hold the radio buttons
+        radio_layout_right = QVBoxLayout()
+        radio_layout = QHBoxLayout()
+        category_left = ("Rent", "Bills", "Subscriptions", "Restaurants") # Radio button options
+        category_right = ("Groceries", "Household", "Entertainment", "Other")
+        radio_buttons_left = [radio_layout_left.addWidget(QRadioButton(i)) for i in category_left] # Add radio buttons to the left layout based on category list
+        radio_buttons_right = [radio_layout_right.addWidget(QRadioButton(i)) for i in category_right] # Add radio buttons to the right layout based on category list
+        radio_layout.addLayout(radio_layout_left) # Add radio left/right layouts to the main radio layout
+        radio_layout.addLayout(radio_layout_right)
+
         main_layout = QVBoxLayout() # Main layout to hold all of the popup specific layouts
         main_layout.addLayout(input_layout) # Adds the popup specific layouts to main layout
+        main_layout.addLayout(radio_layout)
         main_layout.addLayout(button_layout)
         self.setLayout(main_layout)
 
