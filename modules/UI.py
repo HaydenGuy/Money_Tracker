@@ -1,5 +1,5 @@
 from PySide2.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QTableWidget, 
-                               QTableWidgetItem, QPushButton, QDialog, QLineEdit, QLabel, QRadioButton)
+                               QTableWidgetItem, QPushButton, QDialog, QLineEdit, QLabel, QRadioButton, QButtonGroup)
 
 # Popup box that appears when Add Item button is clicked
 class Add_Popup(QDialog):
@@ -10,6 +10,9 @@ class Add_Popup(QDialog):
         self.setGeometry(700, 300, 300, 100)
 
         self.setup_ui()
+
+        # Sends a signal to the selected_button function when a radio button is clicked
+        self.radio_button_group.buttonClicked.connect(self.selected_button)
         
     def setup_ui(self):
         labels_layout = QVBoxLayout() # Creates label layout and add labels to it
@@ -39,18 +42,29 @@ class Add_Popup(QDialog):
         radio_layout_left = QVBoxLayout() # Create layouts to hold the radio buttons
         radio_layout_right = QVBoxLayout()
         radio_layout = QHBoxLayout()
-        category_left = ("Rent", "Bills", "Subscriptions", "Restaurants") # Radio button options
-        category_right = ("Groceries", "Household", "Entertainment", "Other")
-        radio_buttons_left = [radio_layout_left.addWidget(QRadioButton(i)) for i in category_left] # Add radio buttons to the left layout based on category list
-        radio_buttons_right = [radio_layout_right.addWidget(QRadioButton(i)) for i in category_right] # Add radio buttons to the right layout based on category list
+        self.category = ("Rent", "Bills", "Subscriptions", "Restaurants", "Groceries", "Household", "Entertainment", "Other") # Radio button options
+        self.radio_button_group = QButtonGroup() # Container to hold the radio buttons
+        
+        # Iterate through the category list and create a radio button based on the cat
+        for i, cat in enumerate(self.category):
+            button = QRadioButton(cat)
+            self.radio_button_group.addButton(button, i) # Add the radio button to the radio button group
+            if i < 4: # Add the button the radio layout left if i less than 3
+                radio_layout_left.addWidget(button)
+            else:
+                radio_layout_right.addWidget(button)
+        
         radio_layout.addLayout(radio_layout_left) # Add radio left/right layouts to the main radio layout
-        radio_layout.addLayout(radio_layout_right)
-
+        radio_layout.addLayout(radio_layout_right) 
+        
         main_layout = QVBoxLayout() # Main layout to hold all of the popup specific layouts
         main_layout.addLayout(input_layout) # Adds the popup specific layouts to main layout
         main_layout.addLayout(radio_layout)
         main_layout.addLayout(button_layout)
         self.setLayout(main_layout)
+
+    def selected_button(self):
+        selected_category = self.category[self.radio_button_group.checkedId()]
 
     def on_add(self):
         name_input = self.name_box.text()
