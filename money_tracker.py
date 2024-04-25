@@ -1,7 +1,7 @@
 import sys
 
 from typing import Union
-from PySide2.QtWidgets import QMainWindow, QApplication, QWidget, QVBoxLayout, QTableWidget, QTableWidgetItem
+from PySide2.QtWidgets import QMainWindow, QApplication, QWidget, QVBoxLayout, QHBoxLayout, QTableWidget, QTableWidgetItem, QPushButton, QLineEdit
 
 class Money_Tracker(QMainWindow):
     def __init__(self): # Initialises the main window for the UI
@@ -17,6 +17,11 @@ class Money_Tracker(QMainWindow):
 
     # Creates the graphical elements of the UI
     def setup_ui(self):
+        button_layout = QHBoxLayout() # Horizontal layout to hold buttons
+        add_button = QPushButton("Add Item") # Add button
+        remove_button = QPushButton("Remove Item") # Remove button
+        button_layout.addWidget(add_button) # Add/Remove buttons added to button layout
+        button_layout.addWidget(remove_button)
 
         table = QTableWidget(2, 2) # Create a 2x2 table
         table.setHorizontalHeaderLabels(["Price", "Category"]) # Sets column header lable
@@ -36,9 +41,10 @@ class Money_Tracker(QMainWindow):
         table.setColumnWidth(1, 150)
         
         # Creates a vertical layout and adds the table widget to it
-        layout = QVBoxLayout()
-        layout.addWidget(table)
-        self.central_widget.setLayout(layout)
+        v_layout = QVBoxLayout()
+        v_layout.addWidget(table)
+        v_layout.addLayout(button_layout)
+        self.central_widget.setLayout(v_layout)
 
 
 class Item:
