@@ -22,11 +22,15 @@ class Item:
 
 # Popup box that appears when Add Item button is clicked
 class Add_Popup(QDialog):
-    def __init__(self, parent=None): # Defining that there is no parent for clarity
-        super().__init__(parent)
+    def __init__(self, main_ui): # Pass the main_ui as a parent so that it's data can be accessed
+        super().__init__(main_ui)
+
+        self.main_ui_info = main_ui
 
         self.setWindowTitle("Add Item")
         self.setGeometry(700, 300, 300, 100)
+
+        self.item = None # Item container to be used when item is object is added
 
         self.setup_ui()
 
@@ -93,13 +97,26 @@ class Add_Popup(QDialog):
         name_input = self.name_box.text() # The name input text
         price_input = self.price_box.text() # The price input text 
         selected_category = self.selected_button() # The category input name
-        item = Item(name_input, price_input, selected_category) # Creates the item object
+        self.item = Item(name_input, price_input, selected_category) # Creates the item object
         self.close() # Close the window after add is pressed
-
-        return item
+        self.add_item_to_table(self.item) # Runs the money tracker add item to table method over self.item
     
     def on_cancel(self):
+        self.item = None # Reset the self.item if cancel is pressed
         self.close() # If cancel is pressed close the window
+
+    # Adds an item to the table based on information from the item object passed
+    def add_item_to_table(self, item: object):
+        row_count = self.main_ui_info.table.rowCount() # Gets the number of rows
+        self.main_ui_info.table.insertRow(row_count) # Adds a row to the table
+
+        item_name = item.name # Placeholder
+        item_price = item.price # Placeholder
+        item_cat = item.category # Placeholder
+
+        new_item = QTableWidgetItem(item_name) # Placeholder
+
+        self.parent_ui.table.setItem(row_count, 0, new_item) # Placeholder
 
 class Money_Tracker(QMainWindow):
     def __init__(self): # Initialises the main window for the UI
@@ -115,9 +132,8 @@ class Money_Tracker(QMainWindow):
 
     # Creates the graphical elements of the UI
     def setup_ui(self):
-        self.table = QTableWidget(2, 2) # Create a 2x2 table
+        self.table = QTableWidget(1,2) # Create a 1x2 table widget
         self.table.setHorizontalHeaderLabels(["Price", "Category"]) # Sets column header lable
-        self.table.setVerticalHeaderLabels(["ITEM_NAME", "ITEM_NAME"]) # Sets row lable
 
         self.table.setColumnWidth(0, 100)
         self.table.setColumnWidth(1, 150)
@@ -137,7 +153,7 @@ class Money_Tracker(QMainWindow):
         v_layout.addLayout(button_h_layout)
         self.central_widget.setLayout(v_layout)
 
-    # Creates an Add Popup object which allows the user to add items
+    # Creates a popup window object which allows the user to add items
     def add_item_popup(self):
         popup = Add_Popup(self)
         popup.exec_()
