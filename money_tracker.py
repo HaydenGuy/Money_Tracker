@@ -2,7 +2,7 @@ import sys
 
 from typing import Union
 from PySide2.QtWidgets import QApplication
-from modules import main_ui # Imports the UI module
+from modules import UI # Imports the UI module
 
 class Item:
     def __init__(self, name: str, price: Union[int, float], category: str): # Define paramaters of a certain type. Union[] allows either option
@@ -24,7 +24,7 @@ test_item2 = Item("Phone", 27, "BILLS")
 if __name__ == '__main__':
     app = QApplication(sys.argv)
 
-    window = main_ui.Money_Tracker() # Creates a Money_Tracker object from the main_ui module
+    window = UI.Money_Tracker() # Creates a Money_Tracker object from the main_ui module
     window.show()
 
     sys.exit(app.exec_())
