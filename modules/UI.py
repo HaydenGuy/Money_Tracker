@@ -1,4 +1,52 @@
-from PySide2.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QTableWidget, QTableWidgetItem, QPushButton
+from PySide2.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QTableWidget, QTableWidgetItem, QPushButton, QDialog, QLineEdit, QLabel
+
+# Popup box that appears when Add Item button is clicked
+class Add_Popup(QDialog):
+    def __init__(self, parent=None): # Defining that there is no parent for clarity
+        super().__init__(parent)
+
+        self.setWindowTitle("Add Item")
+        self.setGeometry(700, 300, 300, 100)
+
+        self.setup_ui()
+        
+    def setup_ui(self):
+        labels_layout = QVBoxLayout() # Creates label layout and add labels to it
+        name_label = QLabel("Name:  ")
+        price_label = QLabel("Price: ")
+        labels_layout.addWidget(name_label)
+        labels_layout.addWidget(price_label)
+
+        box_layout = QVBoxLayout() # Create layout for line edit boxes and add line edits to it
+        self.name_box = QLineEdit(self)
+        self.price_box = QLineEdit(self)
+        box_layout.addWidget(self.name_box)
+        box_layout.addWidget(self.price_box)
+
+        input_layout = QHBoxLayout() # Create layout to hold the labels and line edits
+        input_layout.addLayout(labels_layout)
+        input_layout.addLayout(box_layout)
+
+        button_layout = QHBoxLayout() # Creates a button layout to hold the add/cancel buttons
+        add_button = QPushButton("Add", self)
+        add_button.clicked.connect(self.on_add) # Run the on_add function when add is pressed
+        cancel_button = QPushButton("Cancel", self)
+        cancel_button.clicked.connect(self.on_cancel) # Run the on_cancel function when cancel is pressed
+        button_layout.addWidget(add_button) # Add buttons to the layout
+        button_layout.addWidget(cancel_button)
+
+        main_layout = QVBoxLayout() # Main layout to hold all of the popup specific layouts
+        main_layout.addLayout(input_layout) # Adds the popup specific layouts to main layout
+        main_layout.addLayout(button_layout)
+        self.setLayout(main_layout)
+
+    def on_add(self):
+        name_input = self.name_box.text()
+        price_input = self.price_box.text()
+        self.close() # Close the window after add is pressed
+
+    def on_cancel(self):
+        self.close() # If cancel is pressed close the window
 
 class Money_Tracker(QMainWindow):
     def __init__(self): # Initialises the main window for the UI
@@ -14,7 +62,7 @@ class Money_Tracker(QMainWindow):
 
     # Creates the graphical elements of the UI
     def setup_ui(self):
-        table = QTableWidget(2, 2) # Create a 2x2 table
+        table = QTableWidget(2, 2) # Create a 2x2 placeholder table
         table.setHorizontalHeaderLabels(["Price", "Category"]) # Sets column header lable
         table.setVerticalHeaderLabels(["ITEM_NAME", "ITEM_NAME"]) # Sets row lable
 
@@ -31,10 +79,12 @@ class Money_Tracker(QMainWindow):
         table.setColumnWidth(0, 100)
         table.setColumnWidth(1, 150)
 
-        # Horizontal layout to hold buttons
-        button_h_layout = QHBoxLayout() 
+        # Creates add and remove buttons
         add_button = QPushButton("Add Item")
+        add_button.clicked.connect(self.add_item_popup) # When add button is clicked the popup function runs
         remove_button = QPushButton("Remove Item")
+
+        button_h_layout = QHBoxLayout() # Horizontal layout to hold buttons
         button_h_layout.addWidget(add_button) # Add/Remove buttons added to button h layout
         button_h_layout.addWidget(remove_button)
         
@@ -43,3 +93,8 @@ class Money_Tracker(QMainWindow):
         v_layout.addWidget(table)
         v_layout.addLayout(button_h_layout)
         self.central_widget.setLayout(v_layout)
+
+    # Creates an Add Popup object which allows the user to add items
+    def add_item_popup(self):
+        popup = Add_Popup(self)
+        popup.exec_()
