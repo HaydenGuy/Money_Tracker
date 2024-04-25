@@ -15,10 +15,10 @@ class Item:
         pattern = r'^[^.]*\.[^.]*$' # Only one . can be present
         if re.search(pattern, price):
             price = float(price)
-            return True
+            return price
         else:
             price = int(price)
-            return False
+            return price
 
 # Popup box that appears when Add Item button is clicked
 class Add_Popup(QDialog):
@@ -110,13 +110,15 @@ class Add_Popup(QDialog):
         row_count = self.main_ui_info.table.rowCount() # Gets the number of rows
         self.main_ui_info.table.insertRow(row_count) # Adds a row to the table
 
-        item_name = item.name # Placeholder
-        item_price = item.price # Placeholder
-        item_cat = item.category # Placeholder
+        # Create a table widget item for name, price and category
+        name = QTableWidgetItem(item.name) 
+        price = QTableWidgetItem(str(item.price)) # Convert the price to a str so it can be displayed
+        category = QTableWidgetItem(item.category)
 
-        new_item = QTableWidgetItem(item_name) # Placeholder
-
-        self.parent_ui.table.setItem(row_count, 0, new_item) # Placeholder
+        # Add the table widget items to the table in columns 0, 1, 2 respectively
+        self.main_ui_info.table.setItem(row_count, 0, name) 
+        self.main_ui_info.table.setItem(row_count, 1, price) 
+        self.main_ui_info.table.setItem(row_count, 2, category) 
 
 class Money_Tracker(QMainWindow):
     def __init__(self): # Initialises the main window for the UI
@@ -132,11 +134,12 @@ class Money_Tracker(QMainWindow):
 
     # Creates the graphical elements of the UI
     def setup_ui(self):
-        self.table = QTableWidget(1,2) # Create a 1x2 table widget
-        self.table.setHorizontalHeaderLabels(["Price", "Category"]) # Sets column header lable
+        self.table = QTableWidget(1, 3) # Create a 1x3 table widget
+        self.table.setHorizontalHeaderLabels(["Name", "Price", "Category"]) # Sets column header lable
 
-        self.table.setColumnWidth(0, 100)
-        self.table.setColumnWidth(1, 150)
+        self.table.setColumnWidth(0, 150)
+        self.table.setColumnWidth(1, 100)
+        self.table.setColumnWidth(2, 150)
 
         # Creates add and remove buttons
         add_button = QPushButton("Add Item")
