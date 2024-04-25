@@ -1,5 +1,24 @@
+import re
+from typing import Union
+
 from PySide2.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QTableWidget, 
                                QTableWidgetItem, QPushButton, QDialog, QLineEdit, QLabel, QRadioButton, QButtonGroup)
+
+# Item object whose information will be used to populate the list
+class Item:
+    def __init__(self, name: str, price: Union[int, float], category: str): # Define paramaters of a certain type. Union[] allows either option
+        self.name = name
+        self.price = self.check_if_float(price)
+        self.category = category
+
+    def check_if_float(self, price): # Checks if the price is a float based on if a . is present
+        pattern = r'^[^.]*\.[^.]*$' # Only one . can be present
+        if re.search(pattern, price):
+            price = float(price)
+            return True
+        else:
+            price = int(price)
+            return False
 
 # Popup box that appears when Add Item button is clicked
 class Add_Popup(QDialog):
@@ -63,14 +82,22 @@ class Add_Popup(QDialog):
         main_layout.addLayout(button_layout)
         self.setLayout(main_layout)
 
+    # Returns the name of the selected button 
     def selected_button(self):
         selected_category = self.category[self.radio_button_group.checkedId()]
+        
+        return selected_category
 
+    # Creates a new item object from the user input and button selection information
     def on_add(self):
-        name_input = self.name_box.text()
-        price_input = self.price_box.text()
+        name_input = self.name_box.text() # The name input text
+        price_input = self.price_box.text() # The price input text 
+        selected_category = self.selected_button() # The category input name
+        item = Item(name_input, price_input, selected_category) # Creates the item object
         self.close() # Close the window after add is pressed
 
+        return item
+    
     def on_cancel(self):
         self.close() # If cancel is pressed close the window
 
@@ -88,22 +115,12 @@ class Money_Tracker(QMainWindow):
 
     # Creates the graphical elements of the UI
     def setup_ui(self):
-        table = QTableWidget(2, 2) # Create a 2x2 placeholder table
-        table.setHorizontalHeaderLabels(["Price", "Category"]) # Sets column header lable
-        table.setVerticalHeaderLabels(["ITEM_NAME", "ITEM_NAME"]) # Sets row lable
+        self.table = QTableWidget(2, 2) # Create a 2x2 table
+        self.table.setHorizontalHeaderLabels(["Price", "Category"]) # Sets column header lable
+        self.table.setVerticalHeaderLabels(["ITEM_NAME", "ITEM_NAME"]) # Sets row lable
 
-        item1 = QTableWidgetItem("1000")  # Placeholder item
-        item2 = QTableWidgetItem("50")  # Placeholder item
-        item3 = QTableWidgetItem("RENT")  # Placeholder item
-        item4 = QTableWidgetItem("PHONE")  # Placeholder item
-
-        table.setItem(0, 0, item1) # Placeholder item
-        table.setItem(1, 0, item2) # Placeholder item
-        table.setItem(0, 1, item3) # Placeholder item
-        table.setItem(1, 1, item4) # Placeholder item
-
-        table.setColumnWidth(0, 100)
-        table.setColumnWidth(1, 150)
+        self.table.setColumnWidth(0, 100)
+        self.table.setColumnWidth(1, 150)
 
         # Creates add and remove buttons
         add_button = QPushButton("Add Item")
@@ -116,7 +133,7 @@ class Money_Tracker(QMainWindow):
         
         # Creates a vertical layout and adds the table widget to it
         v_layout = QVBoxLayout()
-        v_layout.addWidget(table)
+        v_layout.addWidget(self.table)
         v_layout.addLayout(button_h_layout)
         self.central_widget.setLayout(v_layout)
 
