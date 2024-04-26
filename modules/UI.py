@@ -1,8 +1,9 @@
 import re
 from typing import Union
 
-from PySide2.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QTableWidget, 
-                               QTableWidgetItem, QPushButton, QDialog, QLineEdit, QLabel, QRadioButton, QButtonGroup)
+from PySide2.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QTableWidget, QTableWidgetItem, 
+                               QPushButton, QDialog, QLineEdit, QLabel, QRadioButton, QButtonGroup)
+from PySide2 import QtCore
 
 # Item object whose information will be used to populate the list
 class Item:
@@ -114,6 +115,11 @@ class Add_Popup(QDialog):
         name = QTableWidgetItem(item.name) 
         price = QTableWidgetItem(str(item.price)) # Convert the price to a str so it can be displayed
         category = QTableWidgetItem(item.category)
+
+        # Disable the ItemIsEditable flag
+        name.setFlags(name.flags() & ~QtCore.Qt.ItemIsEditable)
+        price.setFlags(price.flags() & ~QtCore.Qt.ItemIsEditable)
+        category.setFlags(category.flags() & ~QtCore.Qt.ItemIsEditable)        
 
         # Add the table widget items to the table in columns 0, 1, 2 respectively
         self.main_ui_info.table.setItem(row_count, 0, name) 
