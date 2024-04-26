@@ -118,8 +118,13 @@ class Add_Popup(QDialog):
         # Add the table widget items to the table in columns 0, 1, 2 respectively
         self.main_ui_info.table.setItem(row_count, 0, name) 
         self.main_ui_info.table.setItem(row_count, 1, price) 
-        self.main_ui_info.table.setItem(row_count, 2, category) 
+        self.main_ui_info.table.setItem(row_count, 2, category)
 
+        # Checks the initial_row boolean and if it is True it will remove the initial empty row and set the value to False
+        if self.main_ui_info.initial_row == True:
+            self.main_ui_info.table.removeRow(0)
+            self.main_ui_info.initial_row = False
+        
 class Money_Tracker(QMainWindow):
     def __init__(self): # Initialises the main window for the UI
         super().__init__()
@@ -134,6 +139,7 @@ class Money_Tracker(QMainWindow):
 
     # Creates the graphical elements of the UI
     def setup_ui(self):
+        self.initial_row = True # Initial row boolean will be used to remove the row when first item is added
         self.table = QTableWidget(1, 3) # Create a 1x3 table widget
         self.table.setHorizontalHeaderLabels(["Name", "Price", "Category"]) # Sets column header lable
 
