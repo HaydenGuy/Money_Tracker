@@ -37,21 +37,35 @@ class Add_Popup(QDialog):
         # Sends a signal to the selected_button function when a radio button is clicked
         
     def setup_ui(self):
-        labels_layout = QVBoxLayout() # Creates label layout and add labels to it
-        name_label = QLabel("Name:  ")
-        price_label = QLabel("Price: ")
-        labels_layout.addWidget(name_label)
+        labels_layout = QVBoxLayout() # Creates label layout
+        name_label = QLabel("Name:     ") # Label item
+        price_label = QLabel("Price:    ")
+        category_label = QLabel("Category: ")
+        cashflow_label = QLabel("Cashflow: ")
+        labels_layout.addWidget(name_label) # Adds the labels to the layout
         labels_layout.addWidget(price_label)
+        labels_layout.addWidget(category_label)
+        labels_layout.addWidget(cashflow_label)
+        
+        input_layout = QVBoxLayout() # Creates a layout for the user input items
+        self.name_box = QLineEdit(self) # Creates an editable area for the item name
+        self.price_box = QLineEdit(self) # Creates an editable area for the price
+        input_layout.addWidget(self.name_box) # Adds the line edits to the input layout
+        input_layout.addWidget(self.price_box)
 
-        box_layout = QVBoxLayout() # Create layout for line edit boxes and add line edits to it
-        self.name_box = QLineEdit(self)
-        self.price_box = QLineEdit(self)
-        box_layout.addWidget(self.name_box)
-        box_layout.addWidget(self.price_box)
+        category = ("Rent", "Bills", "Subscriptions", "Restaurants", "Groceries", "Household", "Entertainment", "Other")
+        self.category_menu = QComboBox() # Creates a dropdown menu
+        self.category_menu.addItems(category) # Adds the category list items to the dropdown menu
+        input_layout.addWidget(self.category_menu) # Adds the dropdown to the input layout
 
-        input_layout = QHBoxLayout() # Create layout to hold the labels and line edits
-        input_layout.addLayout(labels_layout)
-        input_layout.addLayout(box_layout)
+        self.cashflow_menu = QComboBox() # Creates a dropdown menu
+        self.cashflow_menu.addItem("Income") # Adds item to the dropdown list
+        self.cashflow_menu.addItem("Expenditure")
+        input_layout.addWidget(self.cashflow_menu) # Adds the dropdown to the input layout
+
+        labels_input_layout = QHBoxLayout() # Creates a layout to hold the labels and input
+        labels_input_layout.addLayout(labels_layout) # Adds the label layout to the parent
+        labels_input_layout.addLayout(input_layout) # Adds the input layout to the parent
 
         button_layout = QHBoxLayout() # Creates a button layout to hold the add/cancel buttons
         add_button = QPushButton("Add", self)
@@ -60,14 +74,9 @@ class Add_Popup(QDialog):
         cancel_button.clicked.connect(self.on_cancel) # Run the on_cancel function when cancel is pressed
         button_layout.addWidget(add_button) # Add buttons to the layout
         button_layout.addWidget(cancel_button)
-
-        category = ("Rent", "Bills", "Subscriptions", "Restaurants", "Groceries", "Household", "Entertainment", "Other")
-        self.category_menu = QComboBox()
-        self.category_menu.addItems(category)
         
         main_layout = QVBoxLayout() # Main layout to hold all of the popup specific layouts
-        main_layout.addLayout(input_layout) # Adds the popup specific layouts to main layout
-        main_layout.addWidget(self.category_menu)
+        main_layout.addLayout(labels_input_layout)
         main_layout.addLayout(button_layout)
         self.setLayout(main_layout)
 
