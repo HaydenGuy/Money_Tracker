@@ -6,10 +6,11 @@ from PySide2.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, Q
 
 # Item object whose information will be used to populate the list
 class Item:
-    def __init__(self, name: str, price: Union[int, float], category: str): # Define paramaters of a certain type. Union[] allows either option
+    def __init__(self, name: str, price: Union[int, float], category: str, cashflow: str): # Define paramaters of a certain type. Union[] allows either option
         self.name = name
         self.price = self.check_if_float(price)
         self.category = category
+        self.cashflow = cashflow
 
     def check_if_float(self, price): # Checks if the price is a float based on if a . is present
         pattern = r'^[^.]*\.[^.]*$' # Only one . can be present
@@ -84,8 +85,9 @@ class Add_Popup(QDialog):
     def on_add(self):
         name_input = self.name_box.text() # The name input text
         price_input = self.price_box.text() # The price input text 
-        selected_category = self.category_menu.currentText() # The category input name
-        self.item = Item(name_input, price_input, selected_category) # Creates the item object
+        selected_category = self.category_menu.currentText() # The selected category input name
+        selected_cashflow = self.cashflow_menu.currentText() # The selected cashflow input  
+        self.item = Item(name_input, price_input, selected_category, selected_cashflow) # Creates the item object
         self.close() # Close the window after add is pressed
         self.add_item_to_table(self.item) # Runs the money tracker add item to table method over self.item
     
@@ -102,11 +104,13 @@ class Add_Popup(QDialog):
         name = QTableWidgetItem(item.name) 
         price = QTableWidgetItem(str(item.price)) # Convert the price to a str so it can be displayed
         category = QTableWidgetItem(item.category)
+        cashflow = QTableWidgetItem(item.cashflow)
 
-        # Add the table widget items to the table in columns 0, 1, 2 respectively
+        # Add the table widget items to the table in columns 1-4 
         self.main_ui_info.table.setItem(row_count, 0, name) 
         self.main_ui_info.table.setItem(row_count, 1, price) 
         self.main_ui_info.table.setItem(row_count, 2, category)
+        self.main_ui_info.table.setItem(row_count, 3, cashflow)
 
         # Checks the initial_row boolean and if it is True it will remove the initial empty row and set the value to False
         if self.main_ui_info.initial_row == True:
@@ -118,7 +122,7 @@ class Money_Tracker(QMainWindow):
         super().__init__()
         
         self.setWindowTitle("Money Tracker")
-        self.setGeometry(700, 300, 500, 500) # x, y, width, height
+        self.setGeometry(700, 300, 600, 500) # x, y, width, height
 
         self.central_widget = QWidget()
         self.setCentralWidget(self.central_widget)
@@ -128,13 +132,14 @@ class Money_Tracker(QMainWindow):
     # Creates the graphical elements of the UI
     def setup_ui(self):
         self.initial_row = True # Initial row boolean will be used to remove the row when first item is added
-        self.table = QTableWidget(1, 3) # Create a 1x3 table widget
+        self.table = QTableWidget(1, 4) # Create a 1x4 table widget
         self.table.setEditTriggers(QAbstractItemView.NoEditTriggers) # Disable the edit triggers on the table so that cells cannot be edited
-        self.table.setHorizontalHeaderLabels(["Name", "Price", "Category"]) # Sets column header lable
+        self.table.setHorizontalHeaderLabels(["Name", "Price", "Category", "Cashflow"]) # Sets column header lable
 
         self.table.setColumnWidth(0, 150)
         self.table.setColumnWidth(1, 100)
         self.table.setColumnWidth(2, 150)
+        self.table.setColumnWidth(3, 150)
 
         # Creates add and remove buttons
         add_button = QPushButton("Add Item")
