@@ -2,8 +2,7 @@ import re
 from typing import Union
 
 from PySide2.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QTableWidget, QTableWidgetItem, 
-                               QPushButton, QDialog, QLineEdit, QLabel, QRadioButton, QButtonGroup)
-from PySide2 import QtCore
+                               QPushButton, QDialog, QLineEdit, QLabel, QRadioButton, QComboBox, QButtonGroup, QAbstractItemView)
 
 # Item object whose information will be used to populate the list
 class Item:
@@ -36,7 +35,6 @@ class Add_Popup(QDialog):
         self.setup_ui()
 
         # Sends a signal to the selected_button function when a radio button is clicked
-        self.radio_button_group.buttonClicked.connect(self.selected_button)
         
     def setup_ui(self):
         labels_layout = QVBoxLayout() # Creates label layout and add labels to it
@@ -63,41 +61,21 @@ class Add_Popup(QDialog):
         button_layout.addWidget(add_button) # Add buttons to the layout
         button_layout.addWidget(cancel_button)
 
-        radio_layout_left = QVBoxLayout() # Create layouts to hold the radio buttons
-        radio_layout_right = QVBoxLayout()
-        radio_layout = QHBoxLayout()
-        self.category = ("Rent", "Bills", "Subscriptions", "Restaurants", "Groceries", "Household", "Entertainment", "Other") # Radio button options
-        self.radio_button_group = QButtonGroup() # Container to hold the radio buttons
-        
-        # Iterate through the category list and create a radio button based on the cat
-        for i, cat in enumerate(self.category):
-            button = QRadioButton(cat)
-            self.radio_button_group.addButton(button, i) # Add the radio button to the radio button group
-            if i < 4: # Add the button the radio layout left if i less than 3
-                radio_layout_left.addWidget(button)
-            else:
-                radio_layout_right.addWidget(button)
-        
-        radio_layout.addLayout(radio_layout_left) # Add radio left/right layouts to the main radio layout
-        radio_layout.addLayout(radio_layout_right) 
+        category = ("Rent", "Bills", "Subscriptions", "Restaurants", "Groceries", "Household", "Entertainment", "Other")
+        self.category_menu = QComboBox()
+        self.category_menu.addItems(category)
         
         main_layout = QVBoxLayout() # Main layout to hold all of the popup specific layouts
         main_layout.addLayout(input_layout) # Adds the popup specific layouts to main layout
-        main_layout.addLayout(radio_layout)
+        main_layout.addWidget(self.category_menu)
         main_layout.addLayout(button_layout)
         self.setLayout(main_layout)
-
-    # Returns the name of the selected button 
-    def selected_button(self):
-        selected_category = self.category[self.radio_button_group.checkedId()]
-        
-        return selected_category
 
     # Creates a new item object from the user input and button selection information
     def on_add(self):
         name_input = self.name_box.text() # The name input text
         price_input = self.price_box.text() # The price input text 
-        selected_category = self.selected_button() # The category input name
+        selected_category = self.category_menu.currentText() # The category input name
         self.item = Item(name_input, price_input, selected_category) # Creates the item object
         self.close() # Close the window after add is pressed
         self.add_item_to_table(self.item) # Runs the money tracker add item to table method over self.item
@@ -115,11 +93,6 @@ class Add_Popup(QDialog):
         name = QTableWidgetItem(item.name) 
         price = QTableWidgetItem(str(item.price)) # Convert the price to a str so it can be displayed
         category = QTableWidgetItem(item.category)
-
-        # Disable the ItemIsEditable flag
-        name.setFlags(name.flags() & ~QtCore.Qt.ItemIsEditable)
-        price.setFlags(price.flags() & ~QtCore.Qt.ItemIsEditable)
-        category.setFlags(category.flags() & ~QtCore.Qt.ItemIsEditable)        
 
         # Add the table widget items to the table in columns 0, 1, 2 respectively
         self.main_ui_info.table.setItem(row_count, 0, name) 
@@ -147,6 +120,7 @@ class Money_Tracker(QMainWindow):
     def setup_ui(self):
         self.initial_row = True # Initial row boolean will be used to remove the row when first item is added
         self.table = QTableWidget(1, 3) # Create a 1x3 table widget
+        self.table.setEditTriggers(QAbstractItemView.NoEditTriggers) # Disable the edit triggers on the table so that cells cannot be edited
         self.table.setHorizontalHeaderLabels(["Name", "Price", "Category"]) # Sets column header lable
 
         self.table.setColumnWidth(0, 150)
