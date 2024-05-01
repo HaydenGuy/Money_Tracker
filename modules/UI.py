@@ -171,11 +171,6 @@ class Money_Tracker(QMainWindow):
         # Table headers/cells will stretch uniformly to fit the available space of the table widget which is the window size
         self.table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
 
-        # self.table.setColumnWidth(0, 150)
-        # self.table.setColumnWidth(1, 100)
-        # self.table.setColumnWidth(2, 150)
-        # self.table.setColumnWidth(3, 150)
-
         # Creates add and remove buttons
         self.add_button = QPushButton("Add Item")
         self.remove_button = QPushButton("Remove Item")
