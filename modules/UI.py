@@ -2,7 +2,7 @@ import re
 from typing import Union
 
 from PySide2.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QTableWidget, QTableWidgetItem,
-                               QPushButton, QDialog, QLineEdit, QLabel, QComboBox, QAbstractItemView)
+                               QPushButton, QDialog, QLineEdit, QLabel, QComboBox, QAbstractItemView, QSizePolicy, QHeaderView)
 
 
 # Item object whose information will be used to populate the list
@@ -165,10 +165,16 @@ class Money_Tracker(QMainWindow):
         self.table.setHorizontalHeaderLabels(
             ["Name", "Price", "Category", "Cashflow"])  # Sets column header lable
 
-        self.table.setColumnWidth(0, 150)
-        self.table.setColumnWidth(1, 100)
-        self.table.setColumnWidth(2, 150)
-        self.table.setColumnWidth(3, 150)
+        # Table will expand to fit the available horizontal/veritcal space when window is resized
+        self.table.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+
+        # Table headers/cells will stretch uniformly to fit the available space of the table widget which is the window size
+        self.table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+
+        # self.table.setColumnWidth(0, 150)
+        # self.table.setColumnWidth(1, 100)
+        # self.table.setColumnWidth(2, 150)
+        # self.table.setColumnWidth(3, 150)
 
         # Creates add and remove buttons
         self.add_button = QPushButton("Add Item")
