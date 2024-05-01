@@ -148,6 +148,9 @@ class Money_Tracker(QMainWindow):
         self.central_widget = QWidget()
         self.setCentralWidget(self.central_widget)
 
+        self.income_total = "0" # Price total variable
+        self.expenditure_total = "0" # Price total variable
+
         self.setup_ui()
 
         # When add button is clicked the popup method runs
@@ -171,6 +174,9 @@ class Money_Tracker(QMainWindow):
         # Table headers/cells will stretch uniformly to fit the available space of the table widget which is the window size
         self.table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
 
+        self.income_label = QLabel("Income: ") # PLACEHOLDER
+        self.expenditure_label = QLabel("Expenditure: ") # PLACEHOLDER
+
         # Creates add and remove buttons
         self.add_button = QPushButton("Add Item")
         self.remove_button = QPushButton("Remove Item")
@@ -183,6 +189,8 @@ class Money_Tracker(QMainWindow):
         # Creates a vertical layout and adds the table widget to it
         v_layout = QVBoxLayout()
         v_layout.addWidget(self.table)
+        v_layout.addWidget(self.income_label) # PLACEHOLDER
+        v_layout.addWidget(self.expenditure_label) # PLACEHOLDER
         v_layout.addLayout(button_h_layout)
         self.central_widget.setLayout(v_layout)
 
@@ -201,3 +209,7 @@ class Money_Tracker(QMainWindow):
             self.table.setCurrentCell(row - 1, 0) # Sets the active cell to the row above the deleted row
         except AttributeError:
             pass
+    
+    def update_total(self): 
+        self.income_label.setText(f"Total Income: {self.income_total}") # PLACEHOLDER
+        self.expenditure_label.setText(f"Total Expenditure: {self.expenditure_total}") # PLACEHOLDER
