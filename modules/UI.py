@@ -148,8 +148,8 @@ class Money_Tracker(QMainWindow):
         self.central_widget = QWidget()
         self.setCentralWidget(self.central_widget)
 
-        self.income_total = "0" # Price total variable
-        self.expenditure_total = "0" # Price total variable
+        self.income_total = 0 # Price total variable
+        self.expenditure_total = 0 # Price total variable
 
         self.setup_ui()
 
@@ -198,6 +198,7 @@ class Money_Tracker(QMainWindow):
     def add_item_popup(self):
         popup = Add_Popup(self)
         popup.exec_()
+        self.update_totals(popup.item.price, popup.item.cashflow) # Runs the update_totals method with price and cashflow item paramaters
 
     # Removes the currently selected row from the table widget
     def remove_item(self):
@@ -210,6 +211,11 @@ class Money_Tracker(QMainWindow):
         except AttributeError:
             pass
     
-    def update_total(self): 
-        self.income_label.setText(f"Total Income: {self.income_total}") # PLACEHOLDER
-        self.expenditure_label.setText(f"Total Expenditure: {self.expenditure_total}") # PLACEHOLDER
+    # Updates the total labels by adding the price value to the income/expenditure total
+    def update_totals(self, price_added, selected_cashflow):
+        if selected_cashflow == "Income":
+            self.income_total += float(price_added)
+            self.income_label.setText(f"Income: {str(self.income_total)}") # PLACEHOLDER
+        else:
+            self.expenditure_total += float(price_added)
+            self.expenditure_label.setText(f"Expenditure: {str(self.expenditure_total)}") # PLACEHOLDER
