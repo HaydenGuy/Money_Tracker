@@ -34,8 +34,6 @@ class Add_Popup(QDialog):
         self.item = None # Item container to be used when item is object is added
 
         self.setup_ui()
-
-        # Sends a signal to the selected_button function when a radio button is clicked
         
     def setup_ui(self):
         labels_layout = QVBoxLayout() # Creates label layout
