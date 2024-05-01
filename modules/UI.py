@@ -126,6 +126,9 @@ class Money_Tracker(QMainWindow):
         self.setCentralWidget(self.central_widget)
 
         self.setup_ui()
+        
+        self.add_button.clicked.connect(self.add_item_popup) # When add button is clicked the popup method runs
+        # self.remove_button.clicked.connect(self.remove_item) # Runs the remove item method to remove the selected item
 
     # Creates the graphical elements of the UI
     def setup_ui(self):
@@ -140,13 +143,12 @@ class Money_Tracker(QMainWindow):
         self.table.setColumnWidth(3, 150)
 
         # Creates add and remove buttons
-        add_button = QPushButton("Add Item")
-        add_button.clicked.connect(self.add_item_popup) # When add button is clicked the popup function runs
-        remove_button = QPushButton("Remove Item")
+        self.add_button = QPushButton("Add Item")
+        self.remove_button = QPushButton("Remove Item")
 
         button_h_layout = QHBoxLayout() # Horizontal layout to hold buttons
-        button_h_layout.addWidget(add_button) # Add/Remove buttons added to button h layout
-        button_h_layout.addWidget(remove_button)
+        button_h_layout.addWidget(self.add_button) # Add/Remove buttons added to button h layout
+        button_h_layout.addWidget(self.remove_button)
         
         # Creates a vertical layout and adds the table widget to it
         v_layout = QVBoxLayout()
@@ -158,3 +160,5 @@ class Money_Tracker(QMainWindow):
     def add_item_popup(self):
         popup = Add_Popup(self)
         popup.exec_()
+
+    # def remove_item(self, item):
