@@ -128,7 +128,7 @@ class Money_Tracker(QMainWindow):
         self.setup_ui()
         
         self.add_button.clicked.connect(self.add_item_popup) # When add button is clicked the popup method runs
-        # self.remove_button.clicked.connect(self.remove_item) # Runs the remove item method to remove the selected item
+        self.remove_button.clicked.connect(self.remove_item) # Runs the remove item method to remove the selected item
 
     # Creates the graphical elements of the UI
     def setup_ui(self):
@@ -161,4 +161,7 @@ class Money_Tracker(QMainWindow):
         popup = Add_Popup(self)
         popup.exec_()
 
-    # def remove_item(self, item):
+    # Removes the currently selected row from the table widget
+    def remove_item(self, item):
+        item = self.table.currentRow()
+        self.table.removeRow(item)
