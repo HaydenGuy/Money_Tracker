@@ -191,6 +191,11 @@ class Money_Tracker(QMainWindow):
         popup.exec_()
 
     # Removes the currently selected row from the table widget
-    def remove_item(self, item):
-        item = self.table.currentRow()
-        self.table.removeRow(item)
+    def remove_item(self):
+        try:
+            cell = self.table.currentItem()
+            cell_text = cell.text() # If there is no cell text error is raised. This avoids NoneType errors for empty cells
+            row = self.table.currentRow()
+            self.table.removeRow(row)
+        except AttributeError:
+            pass
