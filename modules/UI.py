@@ -148,8 +148,8 @@ class Money_Tracker(QMainWindow):
         self.central_widget = QWidget()
         self.setCentralWidget(self.central_widget)
 
-        self.income_total = 0 # Price total variable
-        self.expenditure_total = 0 # Price total variable
+        self.income_total = 0 # Used in the add_to_total method
+        self.expenditure_total = 0 # Used in the add_to_total method
 
         self.setup_ui()
 
@@ -174,8 +174,8 @@ class Money_Tracker(QMainWindow):
         # Table headers/cells will stretch uniformly to fit the available space of the table widget which is the window size
         self.table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
 
-        self.income_label = QLabel("Income: ") # PLACEHOLDER
-        self.expenditure_label = QLabel("Expenditure: ") # PLACEHOLDER
+        self.income_label = QLabel("Income: 0.0") # PLACEHOLDER
+        self.expenditure_label = QLabel("Expenditure: 0.0") # PLACEHOLDER
 
         # Creates add and remove buttons
         self.add_button = QPushButton("Add Item")
@@ -198,7 +198,7 @@ class Money_Tracker(QMainWindow):
     def add_item_popup(self):
         popup = Add_Popup(self)
         popup.exec_()
-        self.update_totals(popup.item.price, popup.item.cashflow) # Runs the update_totals method with price and cashflow item paramaters
+        self.add_to_total(popup.item.price, popup.item.cashflow) # Runs the add_to_total method with price and cashflow item paramaters
 
     # Removes the currently selected row from the table widget
     def remove_item(self):
@@ -206,16 +206,31 @@ class Money_Tracker(QMainWindow):
             cell = self.table.currentItem() # Gets the selected item from the table
             cell_text = cell.text() # If there is no cell text error is raised. This avoids NoneType errors for empty cells
             row = self.table.currentRow() # Gets the current row value
+            self.subtract_from_total(row) # Runs the subtract from total method to update the total displays
             self.table.removeRow(row) # Removes the selected row
             self.table.setCurrentCell(row - 1, 0) # Sets the active cell to the row above the deleted row
         except AttributeError:
             pass
     
-    # Updates the total labels by adding the price value to the income/expenditure total
-    def update_totals(self, price_added, selected_cashflow):
-        if selected_cashflow == "Income":
-            self.income_total += float(price_added)
+    # Adds the price value to the income/expenditure total and updates the displayed value
+    def add_to_total(self, price, selected_cashflow):
+        if selected_cashflow == "Income": # Adds to income value
+            self.income_total += float(price)
             self.income_label.setText(f"Income: {str(self.income_total)}") # PLACEHOLDER
-        else:
-            self.expenditure_total += float(price_added)
+        else: # Adds to expenditure value
+            self.expenditure_total += float(price)
+            self.expenditure_label.setText(f"Expenditure: {str(self.expenditure_total)}") # PLACEHOLDER
+
+    # Subtracts the price value from the income/expenditure total and updates the displayed value 
+    def subtract_from_total(self, row):
+        price_item = self.table.item(row, 1) # Gets the price QTableWidgetItem
+        price = price_item.text() # Gets the price text
+        cashflow_item = self.table.item(row, 3) # Gets the cashflow QTableWidgetItem
+        selected_cashflow = cashflow_item.text() # Gets the cashflow text
+
+        if selected_cashflow == "Income": # Subtracts from income value
+            self.income_total -= float(price)
+            self.income_label.setText(f"Income: {str(self.income_total)}") # PLACEHOLDER
+        else: # Subtracts from expenditure value
+            self.expenditure_total -= float(price)
             self.expenditure_label.setText(f"Expenditure: {str(self.expenditure_total)}") # PLACEHOLDER
