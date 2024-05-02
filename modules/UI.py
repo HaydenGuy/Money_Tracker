@@ -160,6 +160,8 @@ class Money_Tracker(QMainWindow):
     def __init__(self):  # Initialises the main window for the UI
         super().__init__()
 
+        self.active_window = [] # List to store the active window
+
         self.setWindowTitle("Money Tracker")
         self.setGeometry(700, 300, 600, 500)  # x, y, width, height
 
@@ -188,6 +190,7 @@ class Money_Tracker(QMainWindow):
         menubar = self.menuBar()
         file_menu = menubar.addMenu("File")
 
+        # QAction creates the actions and addAction adds to the menubar
         self.new_action = QAction("New", self)
         file_menu.addAction(self.new_action)
         self.open_action = QAction("Open..", self)
@@ -196,7 +199,6 @@ class Money_Tracker(QMainWindow):
         file_menu.addAction(self.save_action)
         self.save_as_action = QAction("Save As..", self)
         file_menu.addAction(self.save_as_action)
-
 
     # Creates the graphical elements of the UI
     def setup_ui(self):
@@ -214,8 +216,8 @@ class Money_Tracker(QMainWindow):
         # Table headers/cells will stretch uniformly to fit the available space of the table widget which is the window size
         self.table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
 
-        self.income_label = QLabel("Income: 0.0") # PLACEHOLDER
-        self.expenditure_label = QLabel("Expenditure: 0.0") # PLACEHOLDER
+        self.income_label = QLabel("Income: 0.0") 
+        self.expenditure_label = QLabel("Expenditure: 0.0") 
 
         # Creates add and remove buttons
         self.add_button = QPushButton("Add Item")
@@ -229,14 +231,17 @@ class Money_Tracker(QMainWindow):
         # Creates a vertical layout and adds the table widget to it
         v_layout = QVBoxLayout()
         v_layout.addWidget(self.table)
-        v_layout.addWidget(self.income_label) # PLACEHOLDER
-        v_layout.addWidget(self.expenditure_label) # PLACEHOLDER
+        v_layout.addWidget(self.income_label)
+        v_layout.addWidget(self.expenditure_label) 
         v_layout.addLayout(button_h_layout)
         self.central_widget.setLayout(v_layout)
 
-
+    # Closes the active UI and creates a new UI when the New button is selected 
     def new_file(self):
-        ...
+        self.close() # Closes active window
+        new_ui = Money_Tracker() # Create new instance of Money_Tracker and show it
+        new_ui.show()
+        self.active_window.append(new_ui) # Add the new_ui to the active window list. Without this the app will close and destroy() will run behind the scenes 
 
     def open_file(self):
         ...
