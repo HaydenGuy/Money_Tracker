@@ -1,8 +1,8 @@
 import re
 from typing import Union
 
-from PySide2.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QTableWidget, QTableWidgetItem,
-                               QPushButton, QDialog, QLineEdit, QLabel, QComboBox, QAbstractItemView, QSizePolicy, QHeaderView, QMessageBox)
+from PySide2.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QTableWidget, QTableWidgetItem, 
+                               QPushButton, QDialog, QLineEdit, QLabel, QComboBox, QAbstractItemView, QSizePolicy, QHeaderView, QMessageBox, QAction)
 
 
 # Item object whose information will be used to populate the list
@@ -169,12 +169,34 @@ class Money_Tracker(QMainWindow):
         self.income_total = 0 # Used in the add_to_total method
         self.expenditure_total = 0 # Used in the add_to_total method
 
-        self.setup_ui()
+        self.setup_menuBar() # Calls the setup_menuBar to create menu header options
+        self.setup_ui() # Calls setup_ui to create graphical elements of the UI
+        
+        # Signals that connect the menu header options to corresponding slot
+        self.new_action.triggered.connect(self.new_file)
+        self.open_action.triggered.connect(self.open_file)
+        self.save_action.triggered.connect(self.save_file)
+        self.save_as_action.triggered.connect(self.save_as_file)
 
         # When add button is clicked the popup method runs
         self.add_button.clicked.connect(self.add_item_popup)
         # Runs the remove item method to remove the selected item
         self.remove_button.clicked.connect(self.remove_item)
+
+    # Creates the menubar with options File->New/Open/Save/SaveAs
+    def setup_menuBar(self):
+        menubar = self.menuBar()
+        file_menu = menubar.addMenu("File")
+
+        self.new_action = QAction("New", self)
+        file_menu.addAction(self.new_action)
+        self.open_action = QAction("Open..", self)
+        file_menu.addAction(self.open_action)
+        self.save_action = QAction("Save", self)
+        file_menu.addAction(self.save_action)
+        self.save_as_action = QAction("Save As..", self)
+        file_menu.addAction(self.save_as_action)
+
 
     # Creates the graphical elements of the UI
     def setup_ui(self):
@@ -211,6 +233,19 @@ class Money_Tracker(QMainWindow):
         v_layout.addWidget(self.expenditure_label) # PLACEHOLDER
         v_layout.addLayout(button_h_layout)
         self.central_widget.setLayout(v_layout)
+
+
+    def new_file(self):
+        ...
+
+    def open_file(self):
+        ...
+
+    def save_file(self):
+        ...
+    
+    def save_as_file(self):
+        ...
 
     # Creates a popup window object which allows the user to add items
     def add_item_popup(self):
