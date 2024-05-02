@@ -60,7 +60,7 @@ class Add_Popup(QDialog):
         input_layout.addWidget(self.name_box)
         input_layout.addWidget(self.price_box)
 
-        category = ("Wages, Rent", "Bills", "Subscriptions", "Restaurants",
+        category = ("Wages", "Rent", "Bills", "Subscriptions", "Restaurants",
                     "Groceries", "Household", "Entertainment", "Other")
         self.category_menu = QComboBox()  # Creates a dropdown menu
         # Adds the category list items to the dropdown menu
