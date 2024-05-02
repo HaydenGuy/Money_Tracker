@@ -2,7 +2,7 @@ import re
 from typing import Union
 
 from PySide2.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QTableWidget, QTableWidgetItem,
-                               QPushButton, QDialog, QLineEdit, QLabel, QComboBox, QAbstractItemView, QSizePolicy, QHeaderView)
+                               QPushButton, QDialog, QLineEdit, QLabel, QComboBox, QAbstractItemView, QSizePolicy, QHeaderView, QMessageBox)
 
 
 # Item object whose information will be used to populate the list
@@ -104,11 +104,21 @@ class Add_Popup(QDialog):
         # The selected category input name
         selected_category = self.category_menu.currentText()
         selected_cashflow = self.cashflow_menu.currentText()  # The selected cashflow input
-        self.item = Item(name_input, price_input, selected_category,
-                         selected_cashflow)  # Creates the item object
-        self.close()  # Close the window after add is pressed
-        # Runs the money tracker add item to table method over self.item
-        self.add_item_to_table(self.item)
+
+        # ValueError raised when int/float is not entered into price box. Error popup raised
+        try:
+            self.item = Item(name_input, price_input, selected_category,
+                            selected_cashflow)  # Creates the item object
+            self.close()  # Close the window after add is pressed
+            self.add_item_to_table(self.item) # Runs the add item to table method over self.item
+        except ValueError:
+            # Logic to create and display an error popup when letters are entered into the price box
+            error_box = QMessageBox()
+            error_box.setIcon(QMessageBox.Critical)
+            error_box.setWindowTitle("Invalid Entry")
+            error_box.setText("Invalid entry.\n\nPlease enter a number 0.0 or greater.\n")
+            error_box.setStandardButtons(QMessageBox.Ok)
+            error_box.exec_()
 
     def on_cancel(self):
         self.item = None  # Reset the self.item if cancel is pressed
@@ -202,7 +212,7 @@ class Money_Tracker(QMainWindow):
             self.add_to_total(popup.item.price, popup.item.cashflow) # Runs the add_to_total method with price and cashflow item paramaters
         except AttributeError:
             pass
-        
+
     # Removes the currently selected row from the table widget
     def remove_item(self):
         try:
