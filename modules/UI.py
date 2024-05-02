@@ -11,7 +11,7 @@ class Item:
     def __init__(self, name: str, price: Union[int, float], category: str, cashflow: str):
         # Set self.name to name if paramater is given and name not None/False else set to default of -
         self.name = name if name and name != "" else "-"
-        self.price = self.check_if_float(price)
+        self.price = self.check_if_positive(price)
         self.category = category
         self.cashflow = cashflow
 
@@ -24,7 +24,15 @@ class Item:
         else:
             price = int(price)
             return price
-
+    
+    # Checks if the price is positive by checking if it is lower than 0
+    def check_if_positive(self, price):
+        check_if_float_price = self.check_if_float(price)
+        
+        if check_if_float_price < 0:
+            raise ValueError
+        else:
+            return check_if_float_price
 
 # Popup box that appears when Add Item button is clicked
 class Add_Popup(QDialog):
