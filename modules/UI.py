@@ -198,8 +198,11 @@ class Money_Tracker(QMainWindow):
     def add_item_popup(self):
         popup = Add_Popup(self)
         popup.exec_()
-        self.add_to_total(popup.item.price, popup.item.cashflow) # Runs the add_to_total method with price and cashflow item paramaters
-
+        try:
+            self.add_to_total(popup.item.price, popup.item.cashflow) # Runs the add_to_total method with price and cashflow item paramaters
+        except AttributeError:
+            pass
+        
     # Removes the currently selected row from the table widget
     def remove_item(self):
         try:
