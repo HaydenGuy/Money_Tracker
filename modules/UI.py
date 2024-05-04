@@ -37,10 +37,8 @@ class Item:
 
 # Popup box that appears when Add Item button is clicked
 class Add_Popup(QDialog):
-    def __init__(self, main_ui):  # Pass the main_ui as a parent so that it's data can be accessed
-        super().__init__(main_ui)
-
-        self.main_ui_info = main_ui
+    def __init__(self):
+        super().__init__()
 
         self.setWindowTitle("Add Item")
         self.setGeometry(700, 300, 300, 100)
@@ -119,7 +117,7 @@ class Add_Popup(QDialog):
             self.item = Item(name_input, price_input, selected_category,
                             selected_cashflow)  # Creates the item object
             self.close()  # Close the window after add is pressed
-            self.add_item_to_table(self.item) # Runs the add item to table method over self.item
+            return self.item
         except ValueError:
             # Logic to create and display an error popup when letters are entered into the price box
             error_box = QMessageBox()
@@ -132,24 +130,6 @@ class Add_Popup(QDialog):
     def on_cancel(self):
         self.item = None  # Reset the self.item if cancel is pressed
         self.close()  # If cancel is pressed close the window
-
-    # Adds an item to the table based on information from the item object passed
-    def add_item_to_table(self, item: object):
-        row_count = self.main_ui_info.table.rowCount()  # Gets the number of rows
-        self.main_ui_info.table.insertRow(row_count)  # Adds a row to the table
-
-        # Gets the data that will be populate a cell from the Item class and stores it in a list
-        data = [item.name, str(item.price), item.category, item.cashflow]
-
-        # Iterate through the data list and create QTableWidgetItem for each piece of data
-        for column, cell_data in enumerate(data):
-            item = QTableWidgetItem(cell_data)
-            self.main_ui_info.table.setItem(row_count, column, item) # Add the item to the row/column
-
-        # Checks the initial_row boolean and if it is True it will remove the initial empty row and set the value to False
-        if self.main_ui_info.initial_row == True:
-            self.main_ui_info.table.removeRow(0)
-            self.main_ui_info.initial_row = False
 
 
 class Money_Tracker(QMainWindow):
@@ -248,11 +228,11 @@ class Money_Tracker(QMainWindow):
 
         # If the user selects a file it is given a list of files and returns index 0 which is the selected file path
         if file_dialog.exec():
-            selected_csv = file_dialog.selectedFiles()[0]
-            return selected_csv
+            self.selected_csv = file_dialog.selectedFiles()[0]
 
     def open_file(self):
         self.open_file_explorer()
+
 
     def save_file(self):
         ...
@@ -262,12 +242,31 @@ class Money_Tracker(QMainWindow):
 
     # Creates a popup window object which allows the user to add items
     def add_item_popup(self):
-        popup = Add_Popup(self)
+        popup = Add_Popup()
         popup.exec_()
+        self.add_item_to_table(popup.item)
         try:
             self.add_to_total(popup.item.price, popup.item.cashflow) # Runs the add_to_total method with price and cashflow item paramaters
         except AttributeError:
             pass
+
+    # Adds an item to the table based on information from the item object passed
+    def add_item_to_table(self, item: object):
+        row_count = self.table.rowCount()  # Gets the number of rows
+        self.table.insertRow(row_count)  # Adds a row to the table
+
+        # Gets the data that will be populate a cell from the Item class and stores it in a list
+        data = [item.name, str(item.price), item.category, item.cashflow]
+
+        # Iterate through the data list and create QTableWidgetItem for each piece of data
+        for column, cell_data in enumerate(data):
+            item = QTableWidgetItem(cell_data)
+            self.table.setItem(row_count, column, item) # Add the item to the row/column
+
+        # Checks the initial_row boolean and if it is True it will remove the initial empty row and set the value to False
+        if self.initial_row == True:
+            self.table.removeRow(0)
+            self.initial_row = False
 
     # Removes the currently selected row from the table widget
     def remove_item(self):
