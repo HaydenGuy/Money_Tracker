@@ -230,20 +230,20 @@ class Money_Tracker(QMainWindow):
         if file_dialog.exec():
             self.selected_csv = file_dialog.selectedFiles()[0]
 
+    # Reads a csv file from the file_path
     def read_csv_file(self, file_path):
-        with open(file_path, mode='r') as file:
-            csv_reader = csv.reader(file)
-            for row in csv_reader:
-                item = Item(*row)
-                self.add_item_to_table(self, item)
+        with open(file_path, mode='r') as file: # Opens in read mode as file
+            csv_reader = csv.reader(file) # Reads the file
+            for row in csv_reader: # Gets the rows in the csv_reader
+                item = Item(*row) # Unpacks the rows to pass information to the Item class
+                self.add_item_to_table(item) # Adds the items to the table
 
+    # Open_file slot
     def open_file(self):
-        self.open_file_explorer()
+        self.open_file_explorer() # Opens the file explorer
 
-        if self.selected_csv is not None:
-            self.new_file()
+        if self.selected_csv is not None: # If a csv was selected run the read_csv_file on the selected csv
             self.read_csv_file(self.selected_csv)
-
 
     def save_file(self):
         ...
