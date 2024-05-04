@@ -1,9 +1,11 @@
+import csv
 import re
-from typing import Union
 
+from typing import Union
 from PySide2.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QTableWidget, QTableWidgetItem, 
                                QPushButton, QDialog, QLineEdit, QLabel, QComboBox, QAbstractItemView, QSizePolicy, QHeaderView, QMessageBox, QAction)
 
+OPEN_CSV = []
 
 # Item object whose information will be used to populate the list
 class Item:
