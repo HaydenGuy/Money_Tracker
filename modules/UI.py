@@ -230,8 +230,19 @@ class Money_Tracker(QMainWindow):
         if file_dialog.exec():
             self.selected_csv = file_dialog.selectedFiles()[0]
 
+    def read_csv_file(self, file_path):
+        with open(file_path, mode='r') as file:
+            csv_reader = csv.reader(file)
+            for row in csv_reader:
+                item = Item(*row)
+                self.add_item_to_table(self, item)
+
     def open_file(self):
         self.open_file_explorer()
+
+        if self.selected_csv is not None:
+            self.new_file()
+            self.read_csv_file(self.selected_csv)
 
 
     def save_file(self):
@@ -244,9 +255,9 @@ class Money_Tracker(QMainWindow):
     def add_item_popup(self):
         popup = Add_Popup()
         popup.exec_()
-        self.add_item_to_table(popup.item)
         try:
             self.add_to_total(popup.item.price, popup.item.cashflow) # Runs the add_to_total method with price and cashflow item paramaters
+            self.add_item_to_table(popup.item) # Runs the add_item_to_table method to add the new item to the table
         except AttributeError:
             pass
 
