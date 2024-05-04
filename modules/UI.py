@@ -6,8 +6,6 @@ from PySide2.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, Q
                                QPushButton, QDialog, QLineEdit, QLabel, QComboBox, QAbstractItemView, QSizePolicy, 
                                QHeaderView, QMessageBox, QAction, QFileDialog)
 
-OPEN_CSV = []
-
 # Item object whose information will be used to populate the list
 class Item:
     # Define paramaters of a certain type. Union[] allows either option
@@ -252,8 +250,6 @@ class Money_Tracker(QMainWindow):
         if file_dialog.exec():
             selected_csv = file_dialog.selectedFiles()[0]
             return selected_csv
-        else:
-            self.close
 
     def open_file(self):
         self.open_file_explorer()
