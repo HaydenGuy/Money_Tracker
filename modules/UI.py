@@ -137,18 +137,13 @@ class Add_Popup(QDialog):
         row_count = self.main_ui_info.table.rowCount()  # Gets the number of rows
         self.main_ui_info.table.insertRow(row_count)  # Adds a row to the table
 
-        # Create a table widget item for name, price and category
-        name = QTableWidgetItem(item.name)
-        # Convert the price to a str so it can be displayed
-        price = QTableWidgetItem(str(item.price))
-        category = QTableWidgetItem(item.category)
-        cashflow = QTableWidgetItem(item.cashflow)
+        # Gets the data that will be populate a cell from the Item class and stores it in a list
+        data = [item.name, str(item.price), item.category, item.cashflow]
 
-        # Add the table widget items to the table in columns 1-4
-        self.main_ui_info.table.setItem(row_count, 0, name)
-        self.main_ui_info.table.setItem(row_count, 1, price)
-        self.main_ui_info.table.setItem(row_count, 2, category)
-        self.main_ui_info.table.setItem(row_count, 3, cashflow)
+        # Iterate through the data list and create QTableWidgetItem for each piece of data
+        for column, cell_data in enumerate(data):
+            item = QTableWidgetItem(cell_data)
+            self.main_ui_info.table.setItem(row_count, column, item) # Add the item to the row/column
 
         # Checks the initial_row boolean and if it is True it will remove the initial empty row and set the value to False
         if self.main_ui_info.initial_row == True:
@@ -241,7 +236,7 @@ class Money_Tracker(QMainWindow):
         self.close() # Closes active window
         new_ui = Money_Tracker() # Create new instance of Money_Tracker and show it
         new_ui.show()
-        self.active_window.append(new_ui) # Add the new_ui to the active window list. Without this the app will close and destroy() will run behind the scenes 
+        self.active_window.append(new_ui) # Add the new_ui to the active window list. Without this the app will close and destroy() will run behind the scenes
 
     def open_file(self):
         ...
