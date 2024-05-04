@@ -236,6 +236,7 @@ class Money_Tracker(QMainWindow):
             csv_reader = csv.reader(file) # Reads the file
             for row in csv_reader: # Gets the rows in the csv_reader
                 item = Item(*row) # Unpacks the rows to pass information to the Item class
+                self.add_to_total(item.price, item.cashflow) # Updates the total information
                 self.add_item_to_table(item) # Adds the items to the table
 
     # Open_file slot
@@ -243,6 +244,10 @@ class Money_Tracker(QMainWindow):
         self.open_file_explorer() # Opens the file explorer
 
         if self.selected_csv is not None: # If a csv was selected run the read_csv_file on the selected csv
+            self.table.setRowCount(0) # Remove all rows from the table before opening the file
+            self.income_total = 0 # Reset total values
+            self.expenditure_total = 0
+            self.initial_row = False # False means the first line wont be deleted, is used when adding to empty table
             self.read_csv_file(self.selected_csv)
 
     def save_file(self):
@@ -293,7 +298,7 @@ class Money_Tracker(QMainWindow):
     
     # Adds the price value to the income/expenditure total and updates the displayed value
     def add_to_total(self, price, selected_cashflow):
-        if selected_cashflow == "Income": # Adds to income value
+        if selected_cashflow.lower() == "income": # Adds to income value
             self.income_total += float(price)
             self.income_label.setText(f"Income: {str(self.income_total)}") # PLACEHOLDER
         else: # Adds to expenditure value
