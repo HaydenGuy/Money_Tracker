@@ -1,5 +1,6 @@
-import csv
 import re
+import csv
+import os
 
 from typing import Union
 from PySide2.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QTableWidget, QTableWidgetItem,
@@ -138,7 +139,7 @@ class Money_Tracker(QMainWindow):
 
         self.active_window = [] # List to store the active window
 
-        self.setWindowTitle("Money Tracker")
+        self.setWindowTitle("Money Tracker - untitled")
         self.setGeometry(700, 300, 600, 500)  # x, y, width, height
 
         self.central_widget = QWidget()
@@ -248,6 +249,8 @@ class Money_Tracker(QMainWindow):
             self.income_total = 0 # Reset total values
             self.expenditure_total = 0
             self.initial_row = False # False means the first line wont be deleted, is used when adding to empty table
+            file_name = os.path.basename(self.selected_csv) # Gets the file name.csv
+            self.setWindowTitle(f"Money Tracker - {file_name}") # Sets the window title to the file name
             self.read_csv_file(self.selected_csv)
 
     def save_file(self):
