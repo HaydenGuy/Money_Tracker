@@ -2,8 +2,9 @@ import csv
 import re
 
 from typing import Union
-from PySide2.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QTableWidget, QTableWidgetItem, 
-                               QPushButton, QDialog, QLineEdit, QLabel, QComboBox, QAbstractItemView, QSizePolicy, QHeaderView, QMessageBox, QAction)
+from PySide2.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QTableWidget, QTableWidgetItem,
+                               QPushButton, QDialog, QLineEdit, QLabel, QComboBox, QAbstractItemView, QSizePolicy, 
+                               QHeaderView, QMessageBox, QAction, QFileDialog)
 
 OPEN_CSV = []
 
@@ -240,8 +241,22 @@ class Money_Tracker(QMainWindow):
         new_ui.show()
         self.active_window.append(new_ui) # Add the new_ui to the active window list. Without this the app will close and destroy() will run behind the scenes
 
+    # Creates a file explorer window to allow the user to choose a CSV
+    def open_file_explorer(self):
+        file_dialog = QFileDialog()
+        file_dialog.setNameFilter("CSV files (*.csv)") # Allows only .csv
+        file_dialog.setWindowTitle("Select a CSV file")
+        file_dialog.setFileMode(QFileDialog.ExistingFile) # Ensures the file selected exists
+
+        # If the user selects a file it is given a list of files and returns index 0 which is the selected file path
+        if file_dialog.exec():
+            selected_csv = file_dialog.selectedFiles()[0]
+            return selected_csv
+        else:
+            self.close
+
     def open_file(self):
-        ...
+        self.open_file_explorer()
 
     def save_file(self):
         ...
