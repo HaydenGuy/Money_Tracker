@@ -36,7 +36,7 @@ class Item:
         check_if_float_price = self.check_if_float(price)
         
         if check_if_float_price < 0:
-            raise ValueError
+            raise ValueError("Expected a positive number")
         else:
             return check_if_float_price
     
@@ -45,7 +45,7 @@ class Item:
         if category.lower() in self.categories:
             return category.capitalize()
         else:
-            raise ValueError
+            raise ValueError("Expected categories: Wages, Rent, Bills, Subscriptions, Restaurants, Groceries, Household, Entertainment, Other")
 
 
 # Popup box that appears when Add Item button is clicked
@@ -131,7 +131,7 @@ class Add_Popup(QDialog):
                             selected_cashflow)  # Creates the item object
             self.close()  # Close the window after add is pressed
             return self.item
-        except ValueError:
+        except ValueError("Expected a positive number"):
             # Logic to create and display an error popup when letters are entered into the price box
             error_box = QMessageBox()
             error_box.setIcon(QMessageBox.Critical)
@@ -308,7 +308,7 @@ class Money_Tracker(QMainWindow):
             self.subtract_from_total(row) # Runs the subtract from total method to update the total displays
             self.table.removeRow(row) # Removes the selected row
             self.table.setCurrentCell(row - 1, 0) # Sets the active cell to the row above the deleted row
-        except AttributeError:
+        except AttributeError("No cell text present"):
             pass
     
     # Adds the price value to the income/expenditure total and updates the displayed value
