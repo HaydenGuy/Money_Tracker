@@ -9,12 +9,16 @@ from PySide2.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, Q
 
 # Item object whose information will be used to populate the list
 class Item:
+
+    categories = ("wages", "rent", "bills", "subscriptions", "restaurants",
+                    "groceries", "household", "entertainment", "other")
+    
     # Define paramaters of a certain type. Union[] allows either option
     def __init__(self, name: str, price: Union[int, float], category: str, cashflow: str):
         # Set self.name to name if paramater is given and name not None/False else set to default of -
         self.name = name if name and name != "" else "-"
         self.price = self.check_if_positive(price)
-        self.category = category
+        self.category = self.check_category(category)
         self.cashflow = cashflow
 
     # Checks if the price is a float based on if a . is present
@@ -35,6 +39,14 @@ class Item:
             raise ValueError
         else:
             return check_if_float_price
+    
+    # Checks if the category passed is in the list of categories
+    def check_category(self, category):
+        if category.lower() in self.categories:
+            return category.capitalize()
+        else:
+            raise ValueError
+
 
 # Popup box that appears when Add Item button is clicked
 class Add_Popup(QDialog):
