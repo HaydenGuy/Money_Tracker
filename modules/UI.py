@@ -19,7 +19,7 @@ class Item:
         self.name = name if name and name != "" else "-"
         self.price = self.check_if_positive(price)
         self.category = self.check_category(category)
-        self.cashflow = cashflow
+        self.cashflow = self.check_cashflow(cashflow)
 
     # Checks if the price is a float based on if a . is present
     def check_if_float(self, price):
@@ -43,10 +43,15 @@ class Item:
     # Checks if the category passed is in the list of categories
     def check_category(self, category):
         if category.lower() in self.categories:
-            return category.capitalize()
+            return category.lower().capitalize() # Return capitalized version of category
         else:
             raise ValueError("Expected categories: Wages, Rent, Bills, Subscriptions, Restaurants, Groceries, Household, Entertainment, Other")
 
+    def check_cashflow(self, cashflow):
+        if cashflow.lower() == "income" or cashflow.lower() == "expenditure":
+            return cashflow.lower().capitalize() # Return capitalized version of cashflow
+        else:
+            raise ValueError("Expected: Income or Expenditure")
 
 # Popup box that appears when Add Item button is clicked
 class Add_Popup(QDialog):
