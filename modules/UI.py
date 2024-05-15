@@ -15,8 +15,7 @@ class Item:
     
     # Define paramaters of a certain type. Union[] allows either option
     def __init__(self, name: str, price: Union[int, float], category: str, cashflow: str):
-        # Set self.name to name if paramater is given and name not None/False else set to default of -
-        self.name = name if name and name != "" else "-"
+        self.name = name.strip() if name and name != "" else "-" # Trailing whitespace removed from name and set to name or default of - 
         self.price = self.check_if_positive(price)
         self.category = self.check_category(category)
         self.cashflow = self.check_cashflow(cashflow)
@@ -42,14 +41,17 @@ class Item:
     
     # Checks if the category passed is in the list of categories
     def check_category(self, category):
-        if category.lower() in self.categories:
-            return category.lower().capitalize() # Return capitalized version of category
+        cat = category.strip() # Removes trailing and leading whitespace
+        if cat.lower() in self.categories:
+            return cat.lower().capitalize() # Return capitalized version of category
         else:
             raise ValueError("Expected categories: Wages, Rent, Bills, Subscriptions, Restaurants, Groceries, Household, Entertainment, Other")
 
+    # Checks if the cashflow passed is income or expenditure
     def check_cashflow(self, cashflow):
-        if cashflow.lower() == "income" or cashflow.lower() == "expenditure":
-            return cashflow.lower().capitalize() # Return capitalized version of cashflow
+        cash = cashflow.strip() # Removes trailing and leading whitespace
+        if cash.lower() == "income" or cash.lower() == "expenditure":
+            return cash.lower().capitalize() # Return capitalized version of cashflow
         else:
             raise ValueError("Expected: Income or Expenditure")
 
