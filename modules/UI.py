@@ -250,27 +250,36 @@ class Money_Tracker(QMainWindow):
         if file_dialog.exec():
             self.selected_csv = file_dialog.selectedFiles()[0]
 
-    # Reads a csv file from the file_path
+    # Reads a csv file from the file_path and return a list of items
     def read_csv_file(self, file_path):
+        item_list = []
         with open(file_path, mode='r') as file: # Opens in read mode as file
             csv_reader = csv.reader(file) # Reads the file
             for row in csv_reader: # Gets the rows in the csv_reader
                 item = Item(*row) # Unpacks the rows to pass information to the Item class
-                self.add_to_total(item.price, item.cashflow) # Updates the total information
-                self.add_item_to_table(item) # Adds the items to the table
+                item_list.append(item)
+        return item_list
 
     # Open_file slot
     def open_file(self):
         self.open_file_explorer() # Opens the file explorer
-
-        if self.selected_csv is not None: # If a csv was selected run the read_csv_file on the selected csv
+            
+        try: # Get the item_list from read_csv_file
+            items = self.read_csv_file(self.selected_csv)
+        except ValueError: 
+            raise ValueError
+        except TypeError:
+            raise TypeError
+        else:
             self.table.setRowCount(0) # Remove all rows from the table before opening the file
             self.income_total = 0 # Reset total values
             self.expenditure_total = 0
             self.initial_row = False # False means the first line wont be deleted, is used when adding to empty table
             file_name = os.path.basename(self.selected_csv) # Gets the file name.csv
             self.setWindowTitle(f"Money Tracker - {file_name}") # Sets the window title to the file name
-            self.read_csv_file(self.selected_csv)
+            for item in items: # Iterates through the items list
+                self.add_to_total(item.price, item.cashflow) # Updates the total information
+                self.add_item_to_table(item) # Adds the items to the table
 
     def save_file(self):
         ...
