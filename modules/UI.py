@@ -293,17 +293,30 @@ class Money_Tracker(QMainWindow):
                                                    "", 
                                                    "CSV Files (*.csv)")
         
+        # Checks if a .csv appears at the end of the file_name and adds one if it is not present
+        pattern = r'\.csv$'
+        if re.search(pattern, file_name):
+            pass
+        else:
+            file_name += ".csv"
+        
         if file_name:
             with open(file_name, 'w', newline='') as csv_file: # Open file for writing, ensure consistent line endings, automatically close file
                 csv_writer = csv.writer(csv_file) # Create a CSV writer object linked to the opened file for writing
 
-                # Gets the row count for the table and create variable for each item in the row
-                for row in range(self.table.rowCount()):
-                    name = self.table.item(row, 0).text() # Gets the text value for each cell in the row
-                    price = self.table.item(row, 1).text()
-                    category = self.table.item(row, 2).text()
-                    cashflow = self.table.item(row, 3).text()
-                    csv_writer.writerow([name, price, category, cashflow]) # Write the items to the csv rows
+                try:
+                    # Gets the row count for the table and create variable for each item in the row
+                    for row in range(self.table.rowCount()):
+                        name = self.table.item(row, 0).text() # Gets the text value for each cell in the row
+                        price = self.table.item(row, 1).text()
+                        category = self.table.item(row, 2).text()
+                        cashflow = self.table.item(row, 3).text()
+                        csv_writer.writerow([name, price, category, cashflow]) # Write the items to the csv rows
+                except AttributeError:
+                    csv_writer.writerow([])
+
+        file = os.path.basename(file_name) # Gets just the file name not the whole path
+        self.setWindowTitle(f"Money Tracker - {file}") # Sets the window title to the file name
 
     # Creates a popup window object which allows the user to add items
     def add_item_popup(self):
