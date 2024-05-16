@@ -325,7 +325,7 @@ class Money_Tracker(QMainWindow):
         try:
             self.add_to_total(popup.item.price, popup.item.cashflow) # Runs the add_to_total method with price and cashflow item paramaters
             self.add_item_to_table(popup.item) # Runs the add_item_to_table method to add the new item to the table
-        except AttributeError:
+        except AttributeError: # Does nothing when the user hits cancel
             pass
 
     # Adds an item to the table based on information from the item object passed
