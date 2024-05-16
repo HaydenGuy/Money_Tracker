@@ -293,8 +293,16 @@ class Money_Tracker(QMainWindow):
                 self.add_item_to_table(item) # Adds the items to the table
 
     def save_file(self):
-        ...
-    
+        window_title = self.windowTitle() # Gets window title
+        untitled = "Money Tracker - untitled" # Default window titles with/without changes
+        untitled_changes = "Money Tracker - untitled*"
+
+        # Runs save_as if the file has yet to be named and saved
+        if window_title == untitled or window_title == untitled_changes:
+            self.save_as_file()
+
+        
+
     # Saves a user named csv file
     def save_as_file(self):
         # Parent, window title, directory ("" is default), file filter, -  _ returns the filter
