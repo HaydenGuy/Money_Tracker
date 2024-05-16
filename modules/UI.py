@@ -325,6 +325,7 @@ class Money_Tracker(QMainWindow):
         try:
             self.add_to_total(popup.item.price, popup.item.cashflow) # Runs the add_to_total method with price and cashflow item paramaters
             self.add_item_to_table(popup.item) # Runs the add_item_to_table method to add the new item to the table
+            self.check_if_saved() # Checks if there is a * at the end of the window title and adds one if it is not present
         except AttributeError: # Does nothing when the user hits cancel
             pass
 
@@ -355,6 +356,7 @@ class Money_Tracker(QMainWindow):
             self.subtract_from_total(row) # Runs the subtract from total method to update the total displays
             self.table.removeRow(row) # Removes the selected row
             self.table.setCurrentCell(row - 1, 0) # Sets the active cell to the row above the deleted row
+            self.check_if_saved() # Checks if there is a * at the end of the window title and adds one if it is not present
         except: # Raise error window when removing empty cells or when no cells are available to remove
             create_error_window("Empty Cells", "No items to remove")
     
@@ -380,3 +382,10 @@ class Money_Tracker(QMainWindow):
         else: # Subtracts from expenditure value
             self.expenditure_total -= float(price)
             self.expenditure_label.setText(f"Expenditure: {str(self.expenditure_total)}")
+
+    # If there is not a * at the end of the window title, adds one to indicate file has unsaved changes
+    def check_if_saved(self):
+        title = self.windowTitle()
+        pattern = r'\*$'
+        if not re.search(pattern, title):
+            self.setWindowTitle(f"{title}*")
