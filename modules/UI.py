@@ -7,6 +7,15 @@ from PySide2.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, Q
                                QPushButton, QDialog, QLineEdit, QLabel, QComboBox, QAbstractItemView, QSizePolicy, 
                                QHeaderView, QMessageBox, QAction, QFileDialog)
 
+# Creates an error window popup
+def create_error_window(title, text):
+    error_box = QMessageBox()
+    error_box.setIcon(QMessageBox.Critical)
+    error_box.setWindowTitle(f"{title}") 
+    error_box.setText(f"{text}")
+    error_box.setStandardButtons(QMessageBox.Ok) # Gives an ok button for the user to press
+    error_box.exec_()
+
 # Item object whose information will be used to populate the list
 class Item:
 
@@ -138,15 +147,9 @@ class Add_Popup(QDialog):
                             selected_cashflow)  # Creates the item object
             self.close()  # Close the window after add is pressed
             return self.item
-        except ValueError("Expected a positive number"):
-            # Logic to create and display an error popup when letters are entered into the price box
-            error_box = QMessageBox()
-            error_box.setIcon(QMessageBox.Critical)
-            error_box.setWindowTitle("Invalid Entry")
-            error_box.setText("Invalid entry.\n\nPlease enter a number 0.0 or greater.\n")
-            error_box.setStandardButtons(QMessageBox.Ok)
-            error_box.exec_()
-
+        except ValueError: # Display an error popup when numbers are not entered into the price box
+            create_error_window("Invalid Entry", "Please enter a number 0.0 or greater")
+            
     def on_cancel(self):
         self.item = None  # Reset the self.item if cancel is pressed
         self.close()  # If cancel is pressed close the window
@@ -268,6 +271,7 @@ class Money_Tracker(QMainWindow):
             items = self.read_csv_file(self.selected_csv)
         except ValueError: 
             raise ValueError
+            # create_error_window()
         except TypeError:
             raise TypeError
         else:
