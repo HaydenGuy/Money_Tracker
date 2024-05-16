@@ -295,9 +295,7 @@ class Money_Tracker(QMainWindow):
         
         # Checks if a .csv appears at the end of the file_name and adds one if it is not present
         pattern = r'\.csv$'
-        if re.search(pattern, file_name):
-            pass
-        else:
+        if not re.search(pattern, file_name):
             file_name += ".csv"
         
         if file_name:
