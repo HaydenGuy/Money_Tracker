@@ -269,11 +269,8 @@ class Money_Tracker(QMainWindow):
             
         try: # Get the item_list from read_csv_file
             items = self.read_csv_file(self.selected_csv)
-        except ValueError: 
-            raise ValueError
-            # create_error_window()
-        except TypeError:
-            raise TypeError
+        except: # Error window if the information in the CSV does not align with expected
+            create_error_window("Invalid CSV", "Information in the CSV does not match expected format:\n\nName,Price,Category,Cashflow")
         else:
             self.table.setRowCount(0) # Remove all rows from the table before opening the file
             self.income_total = 0 # Reset total values
