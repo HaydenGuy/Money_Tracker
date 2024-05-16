@@ -355,8 +355,8 @@ class Money_Tracker(QMainWindow):
             self.subtract_from_total(row) # Runs the subtract from total method to update the total displays
             self.table.removeRow(row) # Removes the selected row
             self.table.setCurrentCell(row - 1, 0) # Sets the active cell to the row above the deleted row
-        except AttributeError("No cell text present"):
-            pass
+        except: # Raise error window when removing empty cells or when no cells are available to remove
+            create_error_window("Empty Cells", "No items to remove")
     
     # Adds the price value to the income/expenditure total and updates the displayed value
     def add_to_total(self, price, selected_cashflow):
