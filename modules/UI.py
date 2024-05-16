@@ -362,10 +362,10 @@ class Money_Tracker(QMainWindow):
     def add_to_total(self, price, selected_cashflow):
         if selected_cashflow.lower() == "income": # Adds to income value
             self.income_total += float(price)
-            self.income_label.setText(f"Income: {str(self.income_total)}") # PLACEHOLDER
+            self.income_label.setText(f"Income: {str(self.income_total)}")
         else: # Adds to expenditure value
             self.expenditure_total += float(price)
-            self.expenditure_label.setText(f"Expenditure: {str(self.expenditure_total)}") # PLACEHOLDER
+            self.expenditure_label.setText(f"Expenditure: {str(self.expenditure_total)}")
 
     # Subtracts the price value from the income/expenditure total and updates the displayed value 
     def subtract_from_total(self, row):
@@ -376,7 +376,7 @@ class Money_Tracker(QMainWindow):
 
         if selected_cashflow == "Income": # Subtracts from income value
             self.income_total -= float(price)
-            self.income_label.setText(f"Income: {str(self.income_total)}") # PLACEHOLDER
+            self.income_label.setText(f"Income: {str(self.income_total)}")
         else: # Subtracts from expenditure value
             self.expenditure_total -= float(price)
-            self.expenditure_label.setText(f"Expenditure: {str(self.expenditure_total)}") # PLACEHOLDER
+            self.expenditure_label.setText(f"Expenditure: {str(self.expenditure_total)}")
