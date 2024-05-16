@@ -285,8 +285,20 @@ class Money_Tracker(QMainWindow):
     def save_file(self):
         ...
     
+    # Saves a user named csv file
     def save_as_file(self):
-        ...
+        # Parent, window title, directory ("" is default), file filter, -  _ returns the filter
+        file_name, _ = QFileDialog.getSaveFileName(self, 
+                                                   "Save CSV File", 
+                                                   "", 
+                                                   "CSV Files (*.csv)")
+        
+        file_name += ".csv" # Adds .csv to the file name
+
+        if file_name:
+            with open(file_name, 'w', newline='') as csv_file: # Open file for writing, ensure consistent line endings, automatically close file
+                csv_writer = csv.writer(csv_file) # Create a CSV writer object linked to the opened file for writing
+                csv_writer.writerow(["test", 25, "Wages", "Income"])
 
     # Creates a popup window object which allows the user to add items
     def add_item_popup(self):
