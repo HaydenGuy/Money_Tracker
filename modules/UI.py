@@ -293,12 +293,17 @@ class Money_Tracker(QMainWindow):
                                                    "", 
                                                    "CSV Files (*.csv)")
         
-        file_name += ".csv" # Adds .csv to the file name
-
         if file_name:
             with open(file_name, 'w', newline='') as csv_file: # Open file for writing, ensure consistent line endings, automatically close file
                 csv_writer = csv.writer(csv_file) # Create a CSV writer object linked to the opened file for writing
-                csv_writer.writerow(["test", 25, "Wages", "Income"])
+
+                # Gets the row count for the table and create variable for each item in the row
+                for row in range(self.table.rowCount()):
+                    name = self.table.item(row, 0).text() # Gets the text value for each cell in the row
+                    price = self.table.item(row, 1).text()
+                    category = self.table.item(row, 2).text()
+                    cashflow = self.table.item(row, 3).text()
+                    csv_writer.writerow([name, price, category, cashflow]) # Write the items to the csv rows
 
     # Creates a popup window object which allows the user to add items
     def add_item_popup(self):
