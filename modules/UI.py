@@ -273,6 +273,14 @@ class Money_Tracker(QMainWindow):
             create_error_window("Invalid CSV", "Information in the CSV does not match expected format:\n\nName,Price,Category,Cashflow")
         except AttributeError: # Do nothing if the user hits cancel
             pass
+        except TypeError: # When an empty CSV is opened
+            self.table.setRowCount(0) # Remove all rows from the table before opening the file
+            self.income_total = 0 # Reset total values
+            self.expenditure_total = 0
+            self.income_label.setText("Income: 0.0") # Reset label text
+            self.expenditure_label.setText("Expenditure: 0.0")
+            file_name = os.path.basename(self.selected_csv) # Gets the file name.csv
+            self.setWindowTitle(f"Money Tracker - {file_name}") # Sets the window title to the file name
         else:
             self.table.setRowCount(0) # Remove all rows from the table before opening the file
             self.income_total = 0 # Reset total values
