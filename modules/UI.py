@@ -160,6 +160,7 @@ class Money_Tracker(QMainWindow):
         super().__init__()
 
         self.active_window = [] # List to store the active window
+        self.active_file_path = "" # String to store the active file path
 
         self.setWindowTitle("Money Tracker - untitled")
         self.setGeometry(700, 300, 600, 500)  # x, y, width, height
@@ -241,6 +242,7 @@ class Money_Tracker(QMainWindow):
         new_ui = Money_Tracker() # Create new instance of Money_Tracker and show it
         new_ui.show()
         self.active_window.append(new_ui) # Add the new_ui to the active window list. Without this the app will close and destroy() will run behind the scenes
+        self.active_file_path = "" # Resets the active file path variable
 
     # Creates a file explorer window to allow the user to choose a CSV
     def open_file_explorer(self):
@@ -252,6 +254,7 @@ class Money_Tracker(QMainWindow):
         # If the user selects a file it is given a list of files and returns index 0 which is the selected file path
         if file_dialog.exec():
             self.selected_csv = file_dialog.selectedFiles()[0]
+            self.active_file_path = self.selected_csv # Sets the active file path variable to the opened file path
 
     # Reads a csv file from the file_path and return a list of items
     def read_csv_file(self, file_path):
@@ -300,8 +303,8 @@ class Money_Tracker(QMainWindow):
         # Runs save_as if the file has yet to be named and saved
         if window_title == untitled or window_title == untitled_changes:
             self.save_as_file()
-
-        
+        else:
+            print(self.active_file_path)
 
     # Saves a user named csv file
     def save_as_file(self):
@@ -330,7 +333,8 @@ class Money_Tracker(QMainWindow):
                         csv_writer.writerow([name, price, category, cashflow]) # Write the items to the csv rows
                 except AttributeError:
                     csv_writer.writerow([])
-
+        
+        self.active_file_path = file_name # Sets the active file path variable to the saved file path
         file = os.path.basename(file_name) # Gets just the file name not the whole path
         self.setWindowTitle(f"Money Tracker - {file}") # Sets the window title to the file name
 
