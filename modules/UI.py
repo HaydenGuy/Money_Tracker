@@ -171,6 +171,8 @@ class Money_Tracker(QMainWindow):
         self.income_total = 0 # Used in the add_to_total method
         self.expenditure_total = 0 # Used in the add_to_total method
 
+        self.rows_added = 0 # Used in save method
+
         self.setup_menuBar() # Calls the setup_menuBar to create menu header options
         self.setup_ui() # Calls setup_ui to create graphical elements of the UI
         
@@ -304,7 +306,19 @@ class Money_Tracker(QMainWindow):
         if window_title == untitled or window_title == untitled_changes:
             self.save_as_file()
         else:
-            print(self.active_file_path)
+            with open (self.active_file_path, mode='a', newline='') as csv_file:
+                csv_writer = csv.writer(csv_file)
+
+                try: # NOT QUITE WORKING YET
+                    # Gets the row count for the table and create variable for each item in the row
+                    for row in range(self.rows_added, self.table.rowCount()):
+                        name = self.table.item(row, 0).text() # Gets the text value for each cell in the row
+                        price = self.table.item(row, 1).text()
+                        category = self.table.item(row, 2).text()
+                        cashflow = self.table.item(row, 3).text()
+                        csv_writer.writerow([name, price, category, cashflow]) # Write the items to the csv rows
+                except AttributeError:
+                    pass
 
     # Saves a user named csv file
     def save_as_file(self):
@@ -346,6 +360,7 @@ class Money_Tracker(QMainWindow):
             self.add_to_total(popup.item.price, popup.item.cashflow) # Runs the add_to_total method with price and cashflow item paramaters
             self.add_item_to_table(popup.item) # Runs the add_item_to_table method to add the new item to the table
             self.check_if_saved() # Checks if there is a * at the end of the window title and adds one if it is not present
+            self.rows_added += 1 # Adds +1 to the rows added variable
         except AttributeError: # Does nothing when the user hits cancel
             pass
 
@@ -377,6 +392,7 @@ class Money_Tracker(QMainWindow):
             self.table.removeRow(row) # Removes the selected row
             self.table.setCurrentCell(row - 1, 0) # Sets the active cell to the row above the deleted row
             self.check_if_saved() # Checks if there is a * at the end of the window title and adds one if it is not present
+            self.rows_added -= 1 if self.rows_added > 0 else 0 # -1 from the rows_added if button is pressed and rows added is over 0
         except: # Raise error window when removing empty cells or when no cells are available to remove
             create_error_window("Empty Cells", "No items to remove")
     
