@@ -267,6 +267,21 @@ class Money_Tracker(QMainWindow):
                 item = Item(*row) # Unpacks the rows to pass information to the Item class
                 item_list.append(item)
         return item_list
+    
+    # Reads the csv file and checks if the last line is a newline/empty row. If not it adds one
+    def check_for_newline(self, csv_file):
+        # Open the file in read-write binary mode
+        with open(csv_file, "r+b") as file:
+            file.seek(0, os.SEEK_END)  # Move the pointer to the end of the file
+            if file.tell() == 0:  # Check if the file is empty
+                needs_newline = False
+            else:
+                file.seek(-1, os.SEEK_END)  # Move the pointer to the last byte
+                last_char = file.read(1)
+                needs_newline = last_char != b'\n'  # Check if the last character is not a newline
+            
+            if needs_newline:
+                file.write(b'\n')  # Write a newline character if it's not there
 
     # Open_file slot
     def open_file(self):
@@ -308,7 +323,8 @@ class Money_Tracker(QMainWindow):
         else:
             row_count = self.table.rowCount() # Number of rows total
             new_rows = self.table.rowCount() - self.rows_added # Number of new rows added
-            
+            self.check_for_newline(self.active_file_path)
+
             with open (self.active_file_path, mode='a', newline='') as csv_file:
                 csv_writer = csv.writer(csv_file)
 
