@@ -283,6 +283,15 @@ class Money_Tracker(QMainWindow):
             if needs_newline:
                 file.write(b'\n')  # Write a newline character if it's not there
 
+    # Writes all the lines in the table to a csv_file
+    def write_rows_to_csv(self, csv_writer):
+        for row in range(self.table.rowCount()):
+            name = self.table.item(row, 0).text() # Gets the text value for each cell in the row
+            price = self.table.item(row, 1).text()
+            category = self.table.item(row, 2).text()
+            cashflow = self.table.item(row, 3).text()
+            csv_writer.writerow([name, price, category, cashflow]) # Write the items to the csv rows
+
     # Open_file slot
     def open_file(self):
         self.open_file_explorer() # Opens the file explorer
@@ -321,26 +330,17 @@ class Money_Tracker(QMainWindow):
         if window_title == untitled or window_title == untitled_changes:
             self.save_as_file()
         else:
-            row_count = self.table.rowCount() # Number of rows total
-            new_rows = self.table.rowCount() - self.rows_added # Number of new rows added
             self.check_for_newline(self.active_file_path) # Checks if for an empty line/row at the end of the csv file
 
-            with open (self.active_file_path, mode='a', newline='') as csv_file:
+            with open (self.active_file_path, mode='w', newline='') as csv_file:
                 csv_writer = csv.writer(csv_file)
 
                 try:
-                    # Gets the row count for the table and create variable for each item in the row
-                    for row in range(new_rows, row_count): 
-                        name = self.table.item(row, 0).text() # Gets the text value for each cell in the row
-                        price = self.table.item(row, 1).text()
-                        category = self.table.item(row, 2).text()
-                        cashflow = self.table.item(row, 3).text()
-                        csv_writer.writerow([name, price, category, cashflow]) # Write the items to the csv rows
+                    self.write_rows_to_csv(csv_writer) # Writes all rows from the table to the active csv_file
                 except AttributeError:
                     pass
-
-            # Resets the rows added to 0 and removes the * from the window title
-            self.rows_added = 0
+            
+            # Resets the title by removing the *
             title = self.windowTitle()[:-1]
             self.setWindowTitle(title)
 
@@ -362,13 +362,7 @@ class Money_Tracker(QMainWindow):
                 csv_writer = csv.writer(csv_file) # Create a CSV writer object linked to the opened file for writing
 
                 try:
-                    # Gets the row count for the table and create variable for each item in the row
-                    for row in range(self.table.rowCount()):
-                        name = self.table.item(row, 0).text() # Gets the text value for each cell in the row
-                        price = self.table.item(row, 1).text()
-                        category = self.table.item(row, 2).text()
-                        cashflow = self.table.item(row, 3).text()
-                        csv_writer.writerow([name, price, category, cashflow]) # Write the items to the csv rows
+                    self.write_rows_to_csv(csv_writer) # Writes all rows from the table to the file_name csv file
                 except AttributeError:
                     csv_writer.writerow([])
         
