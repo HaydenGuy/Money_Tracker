@@ -306,12 +306,15 @@ class Money_Tracker(QMainWindow):
         if window_title == untitled or window_title == untitled_changes:
             self.save_as_file()
         else:
+            row_count = self.table.rowCount() # Number of rows total
+            new_rows = self.table.rowCount() - self.rows_added # Number of new rows added
+            
             with open (self.active_file_path, mode='a', newline='') as csv_file:
                 csv_writer = csv.writer(csv_file)
 
-                try: # NOT QUITE WORKING YET
+                try:
                     # Gets the row count for the table and create variable for each item in the row
-                    for row in range(self.rows_added, self.table.rowCount()):
+                    for row in range(new_rows, row_count): 
                         name = self.table.item(row, 0).text() # Gets the text value for each cell in the row
                         price = self.table.item(row, 1).text()
                         category = self.table.item(row, 2).text()
