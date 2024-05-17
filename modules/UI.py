@@ -323,7 +323,7 @@ class Money_Tracker(QMainWindow):
         else:
             row_count = self.table.rowCount() # Number of rows total
             new_rows = self.table.rowCount() - self.rows_added # Number of new rows added
-            self.check_for_newline(self.active_file_path)
+            self.check_for_newline(self.active_file_path) # Checks if for an empty line/row at the end of the csv file
 
             with open (self.active_file_path, mode='a', newline='') as csv_file:
                 csv_writer = csv.writer(csv_file)
@@ -338,6 +338,11 @@ class Money_Tracker(QMainWindow):
                         csv_writer.writerow([name, price, category, cashflow]) # Write the items to the csv rows
                 except AttributeError:
                     pass
+
+            # Resets the rows added to 0 and removes the * from the window title
+            self.rows_added = 0
+            title = self.windowTitle()[:-1]
+            self.setWindowTitle(title)
 
     # Saves a user named csv file
     def save_as_file(self):
