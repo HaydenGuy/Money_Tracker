@@ -292,7 +292,7 @@ class Money_Tracker(QMainWindow):
             cashflow = self.table.item(row, 3).text()
             csv_writer.writerow([name, price, category, cashflow]) # Write the items to the csv rows
 
-    # Open_file slot
+    # Opens a selected csv file
     def open_file(self):
         self.open_file_explorer() # Opens the file explorer
             
@@ -321,6 +321,21 @@ class Money_Tracker(QMainWindow):
                 self.add_to_total(item.price, item.cashflow) # Updates the total information
                 self.add_item_to_table(item) # Adds the items to the table
 
+    # Creates a question window to confirm if you want to save the file
+    def save_file_question_window(self, title, text):
+        question_box = QMessageBox()
+        question_box.setIcon(QMessageBox.Question)
+        question_box.setWindowTitle(f"{title}") 
+        question_box.setText(f"{text}")
+        question_box.setStandardButtons(QMessageBox.Yes | QMessageBox.No) # Gives yes or no buttons
+        user_selection = question_box.exec_() # Will retrieve the selected yes or no
+
+        if user_selection == QMessageBox.Yes:
+            return True
+        else:
+            return False
+
+    # Saves an exisitng csv file or save_as if it's a new file
     def save_file(self):
         window_title = self.windowTitle() # Gets window title
         untitled = "Money Tracker - untitled" # Default window titles with/without changes
