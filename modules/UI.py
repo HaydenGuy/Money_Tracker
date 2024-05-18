@@ -250,7 +250,7 @@ class Money_Tracker(QMainWindow):
     def open_file_explorer(self):
         file_dialog = QFileDialog()
         file_dialog.setNameFilter("CSV files (*.csv)") # Allows only .csv
-        file_dialog.setWindowTitle("Select a CSV file")
+        file_dialog.setWindowTitle("Select a CSV file to open")
         file_dialog.setFileMode(QFileDialog.ExistingFile) # Ensures the file selected exists
 
         # If the user selects a file it is given a list of files and returns index 0 which is the selected file path
@@ -291,9 +291,34 @@ class Money_Tracker(QMainWindow):
             category = self.table.item(row, 2).text()
             cashflow = self.table.item(row, 3).text()
             csv_writer.writerow([name, price, category, cashflow]) # Write the items to the csv rows
+            
+    # Creates a question window to confirm if you want to save the file
+    def save_file_question_window(self, title, text):
+        question_box = QMessageBox()
+        question_box.setIcon(QMessageBox.Question)
+        question_box.setWindowTitle(f"{title}") 
+        question_box.setText(f"{text}")
+        question_box.setStandardButtons(QMessageBox.Yes | QMessageBox.No) # Gives yes or no buttons
+        user_selection = question_box.exec_() # Will retrieve the selected yes or no
 
+        if user_selection == QMessageBox.Yes:
+            return True
+        else:
+            return False
+        
     # Opens a selected csv file
     def open_file(self):
+        window_title = self.windowTitle()
+
+        # Checks if the current file has unsaved information and runs the save file method before opening new file if user selects to save
+        if window_title[-1] == "*":
+            user_selection = self.save_file_question_window("Unsaved File", "Would you like to save the current file before opening?")
+            
+            if user_selection == True:
+                self.save_file()
+            else:
+                pass
+        
         self.open_file_explorer() # Opens the file explorer
             
         try: # Get the item_list from read_csv_file
@@ -320,20 +345,6 @@ class Money_Tracker(QMainWindow):
             for item in items: # Iterates through the items list
                 self.add_to_total(item.price, item.cashflow) # Updates the total information
                 self.add_item_to_table(item) # Adds the items to the table
-
-    # Creates a question window to confirm if you want to save the file
-    def save_file_question_window(self, title, text):
-        question_box = QMessageBox()
-        question_box.setIcon(QMessageBox.Question)
-        question_box.setWindowTitle(f"{title}") 
-        question_box.setText(f"{text}")
-        question_box.setStandardButtons(QMessageBox.Yes | QMessageBox.No) # Gives yes or no buttons
-        user_selection = question_box.exec_() # Will retrieve the selected yes or no
-
-        if user_selection == QMessageBox.Yes:
-            return True
-        else:
-            return False
 
     # Saves an exisitng csv file or save_as if it's a new file
     def save_file(self):
