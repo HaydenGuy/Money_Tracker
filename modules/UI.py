@@ -344,7 +344,13 @@ class Money_Tracker(QMainWindow):
         # Runs save_as if the file has yet to be named and saved
         if window_title == untitled or window_title == untitled_changes:
             self.save_as_file()
-        else:
+        
+        # Runs the save file question window and if No nothing happens
+        overwrite = self.save_file_question_window("Save File", "Are you sure you want to overwrite the existing data?")
+
+        if overwrite == False:
+            pass
+        else: # If user selects Yes from question window the file is overwritten
             self.check_for_newline(self.active_file_path) # Checks if for an empty line/row at the end of the csv file
 
             with open (self.active_file_path, mode='w', newline='') as csv_file:
