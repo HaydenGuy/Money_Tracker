@@ -264,8 +264,9 @@ class Money_Tracker(QMainWindow):
         with open(file_path, mode='r') as file: # Opens in read mode as file
             csv_reader = csv.reader(file) # Reads the file
             for row in csv_reader: # Gets the rows in the csv_reader
-                item = Item(*row) # Unpacks the rows to pass information to the Item class
-                item_list.append(item)
+                if any(row): # If a row exist (is not empty)
+                    item = Item(*row) # Unpacks the rows to pass information to the Item class
+                    item_list.append(item)
         return item_list
     
     # Reads the csv file and checks if the last line is a newline/empty row. If not it adds one
