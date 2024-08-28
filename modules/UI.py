@@ -3,9 +3,10 @@ import csv
 import os
 
 from typing import Union
-from PySide2.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QTableWidget, QTableWidgetItem,
+from PySide6.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QTableWidget, QTableWidgetItem,
                                QPushButton, QDialog, QLineEdit, QLabel, QComboBox, QAbstractItemView, QSizePolicy, 
-                               QHeaderView, QMessageBox, QAction, QFileDialog)
+                               QHeaderView, QMessageBox, QFileDialog)
+from PySide6.QtGui import QAction
 
 # Creates an error window popup
 def create_error_window(title, text):
